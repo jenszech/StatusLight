@@ -1,0 +1,100 @@
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script type="text/javascript">
+    function sendAdminCmd(action, actionId) {
+        console.log(action)
+        console.log(actionId)
+        $.ajax({
+            url: "/admin",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            data: {
+                action: action,
+                actionId: actionId
+
+            },
+            cache: false,
+            timeout: 5000,
+            complete: function() {
+                //called when complete
+                console.log('process complete');
+            },
+
+            success: function(data) {
+                console.log(data);
+                console.log('process sucess');
+                location.reload();
+            },
+
+            error: function() {
+                console.log('process error');
+            },
+        });
+     }
+</script>
+
+
+<div class="table-title">
+    <div class="lights {{overallStatus.key}}">
+        <span class="top">&bull;</span>
+        <span class="middle">&bull;</span>
+        <span class="bottom">&bull;</span>
+    </div>
+        <h3>Gesamtstatus
+            <img src="../images/btn_reload.png" width="30px" height="30px" style="float: right" onclick="sendAdminCmd('triggerReload',0)"/>
+        </h3>
+</div>
+
+
+<div class="table-title">
+    <h3>Status aller aktuellen Überwachungen !</h3>
+</div>
+<table class="table-fill">
+    <thead>
+    <tr>
+        <th class="text-left">Typ</th>
+        <th class="text-left">Name</th>
+        <th class="text-left">Status</th>
+        <th class="text-left">Last Update</th>
+    </tr>
+    </thead>
+    <tbody class="table-hover">
+        {{#each statusList}}
+        <tr>
+            <td class="text-left">{{this.Typ}}</td>
+            <td class="text-left">
+                {{#if this.Disabled}}
+                    <del>{{this.Name}}</del>
+                {{^}}
+                    {{this.Name}}
+                {{/if}}
+            </td>
+            <td class="text-left">
+                <div class="lights-small {{this.Status.key}}">
+                    <span class="top">&bull;</span>
+                </div>
+                    {{#if this.Disabled}}
+                        <img src="../images/btn_play.png" width="30px" height="30px" style="float: right" onclick="sendAdminCmd('play',{{this.Id}})"/>
+                    {{^}}
+                        <img src="../images/btn_pause.png" width="30px" height="30px" style="float: right" onclick="sendAdminCmd('pause',{{this.Id}})"/>
+                    {{/if}}
+                </form>
+            </td>
+            <td class="text-left">{{this.UpdateDateStr}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="table-title">
+    <div class="lights-small GREEN" onclick="sendAdminCmd('setLocale',1);">
+        <span class="top">&bull;</span>
+    </div>
+    <div class="lights-small YELLOW" onclick="sendAdminCmd('setLocale',2);">
+        <span class="top" id="test">&bull;</span>
+    </div>
+    <div class="lights-small RED" onclick="sendAdminCmd('setLocale',3);">
+        <span class="top">&bull;</span>
+    </div>
+</div>
+<div>Last Reload: {{reloadTime}}</div>

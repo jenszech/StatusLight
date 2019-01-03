@@ -1,0 +1,48 @@
+{
+  "TrafficLight": {
+    "mainSetting": {
+      "pollingEnabled": true,
+      "pollingIntervall" : 60,
+      "env": "default"
+    },
+    "lightManager": {
+      "lightsEnabled": true
+    },
+    "checkConfig": {
+      "local" : {
+        "enable": true
+      },
+      "grafana" : {
+        "enable": false,
+        "alertLight": 3,
+        "url" : "https://YOUR GRAFANA URL/api/alerts",
+        "token" : "INSERT YOUR TOKEN HERE"
+      },
+      "jenkins" : {
+        "enable": false,
+        "alertLight": 2,
+        "url" : "YOUR JENKINS URL/jenkins/view/RED/job",
+        "user" : "INSERT USERMAME",
+        "password" : "INSERT PASSWORD",
+        "jobs" : [
+          "INSERT YOUR JOBNAME"
+        ]
+      },
+      "dtsmon" : {
+        "enable": false,
+        "alertLight": 3,
+        "url" : "https://dtsmon.buch.de/index.php?i=monitoring&mode=group&m=504",
+        "username" : "INSERT YOUR USERNAME",
+        "password" : "INSERT YOUR PASSWORD"
+      }
+    },
+    "reportConfig": {
+      "slack": {
+        "enable": false,
+        "webhook": "INSERT YOUR WEBOOK URL",
+        "username": "Traffic light alarm",
+        "channel": "INSERT DESTINATION CHANNEL"
+      }
+    }
+  }
+}

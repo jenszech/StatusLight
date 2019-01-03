@@ -1,0 +1,11 @@
+package-lock.json
+
+node_modules/
+
+.idea/
+
+logs/
+
+config/prod.json
+
+config/dev.json
