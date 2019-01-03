@@ -98,7 +98,7 @@ npm install
 Einrichten als Process mit Autostart
 ```
 sudo npm install pm2@latest -g
-pm2 start bin/www
+pm2 start bin/statusLight
 pm2 startup systemd
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 pm2 list
@@ -219,14 +219,14 @@ pm2 list
 
 #### Server neustarten
 ```
-pm2 restart www
+pm2 restart statusLight
 ```
 
 #### Update der Projekt Software
 ```
 cd StatusAmpel
 git pull
-pm2 restart www
+pm2 restart statusLight
 ```
 
 
@@ -239,7 +239,7 @@ pm2 restart www
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 

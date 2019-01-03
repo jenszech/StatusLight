@@ -10,11 +10,11 @@
 
 ## Changelog
 ### 0.9.3
-* Favicon
-* Autoreload und Anzeige des letzten Reload Timestamps
-* Slack reporting on status change
-* DTSMon Monitoring
+* Added state related favicon
+* Autoreload of the statuspage an visualisation of last reload timestamp
+* New Report Plugin for slack reporting on status change
+* New Monitoring Plugin for DTSMon monitoring
 
 ### 0.9.2
-* Umstellung auf Ajax Calls
-* Manuelles setzen eines minimalen Error Status
+* Migration to ajax calls
+* manuel minimal alarming level introduced
