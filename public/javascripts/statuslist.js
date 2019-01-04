@@ -16,6 +16,9 @@ var StatusEntry = function(stype, id, sgroup, sname, status) {
     this.Status = STATUS_LIGHTS.get(status);
     this.UpdateDate = Date.now();
     this.UpdateDateStr = dateFormat(this.UpdateDate, 'dd.mm.yyyy HH:MM');
+    this.LastAlarmChange = Date.now();
+    this.LastAlarmChangeStr = dateFormat(this.LastAlarmChange, 'dd.mm.yyyy HH:MM');
+    this.DelayAlarm = 0;
     this.Disabled = false;
 };
 
@@ -44,8 +47,9 @@ exports.setDisable = function(checkId, isDisabled) {
     }
 }
 
-exports.updateList = function(stype, sId, sgroup, sname, sstatus) {
+exports.updateList = function(stype, sId, sgroup, sname, sstatus, delay) {
     var newStatus = new StatusEntry(stype, sId, sgroup, sname, sstatus);
+    newStatus.DelayAlarm = delay;
     update(newStatus);
 }
 
@@ -53,7 +57,10 @@ exports.getGesamtStatus = function() {
     var status = STATUS_LIGHTS.GRAY;
     for (var i in statusList) {
         if ((statusList[i].Disabled != true) && (statusList[i].Status.value > status.value)) {
-            status = statusList[i].Status;
+            logger.debug(statusList[i].Typ + " : "+ statusList[i].LastAlarmChange + " + " + statusList[i].DelayAlarm + " <= " +Date.now());
+            if ((statusList[i].Status.value <= 1) || (statusList[i].LastAlarmChange + statusList[i].DelayAlarm*1000 <= Date.now())) {
+                status = statusList[i].Status;
+            }
         }
     }
     return status;
@@ -63,24 +70,37 @@ exports.getAlerts = function() {
     var result = [];
     for (var i in statusList) {
         if ((statusList[i].Disabled != true) && (statusList[i].Status.value > STATUS_LIGHTS.GREEN.value)) {
-            result.push(statusList[i]);
+            if (statusList[i].LastAlarmChange + statusList[i].DelayAlarm*1000 <= Date.now()) {
+                result.push(statusList[i]);
+            }
         }
     }
     return result;
+}
+
+function setState(status, newStatus) {
+    if (status.Status.value != newStatus.Status.value) {
+        logger.info("Status change: " + status.Status.key + " - " + status.Typ + ":" + status.Name);
+        if (status.Disabled == true) {
+            status.Disabled = false;
+            logger.debug(' Reenabled');
+        }
+        if ((newStatus.Status.value > 1) && (status.Status.value <= 1)) {
+            status.LastAlarmChange = Date.now();
+            status.LastAlarmChangeStr = dateFormat(statusList[i].LastAlarmChange, 'dd.mm.yyyy HH:MM');
+        } else if ((newStatus.Status.value <= 1)) {
+            status.LastAlarmChange = Date.now();
+            status.LastAlarmChangeStr = dateFormat(statusList[i].LastAlarmChange, 'dd.mm.yyyy HH:MM');
+        }
+    }
+    status.Status = newStatus.Status;
 }
 
 function update(newStatus) {
     var found = false;
     for (var i in statusList) {
         if ((statusList[i].Typ == newStatus.Typ) && (statusList[i].Id == newStatus.Id)) {
-            if (statusList[i].Status.value != newStatus.Status.value) {
-                logger.info("Status change: " + statusList[i].Status.key + " - " + statusList[i].Typ + ":" + statusList[i].Name);
-                if (statusList[i].Disabled == true) {
-                    statusList[i].Disabled = false;
-                    logger.debug(' Reenabled');
-                }
-            }
-            statusList[i].Status = newStatus.Status;
+            setState(statusList[i], newStatus)
             statusList[i].UpdateDate = Date.now();
             statusList[i].UpdateDateStr = dateFormat(statusList[i].UpdateDate, 'yyyy-mm-dd HH:MM');
             found = true;

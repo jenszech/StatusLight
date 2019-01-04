@@ -12,26 +12,6 @@ router.get('/', function(req, res, next) {
     renderList(res);
 });
 
-/* GET status listing. */
-router.post('/', function(req, res, next) {
-   logger.debug('POST Response');
-    if (req.body.action == "reload") {
-        logger.debug('=> Reload');
-        statusMgr.runSingleCheck();
-        renderList(res);
-    }
-    if (req.body.action == "pause") {
-        logger.debug('=> Pause: '+req.body.checkId);
-        statusMgr.getStatusList().setDisable(req.body.checkId, true);
-        renderList(res);
-    }
-    if (req.body.action == "play") {
-        logger.debug(' => Pause: '+req.body.checkId);
-        statusMgr.getStatusList().setDisable(req.body.checkId, false);
-        renderList(res);
-    }
-});
-
 function renderList(res){
     var statuslist = statusMgr.getStatusList();
     var now = dateFormat(Date.now(), 'dd.mm.yyyy HH:MM:ss');

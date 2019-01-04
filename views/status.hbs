@@ -55,6 +55,7 @@
         <th class="text-left">Typ</th>
         <th class="text-left">Name</th>
         <th class="text-left">Status</th>
+        <th class="text-left">Last Change</th>
         <th class="text-left">Last Update</th>
     </tr>
     </thead>
@@ -80,6 +81,7 @@
                     {{/if}}
                 </form>
             </td>
+            <td class="text-left">{{this.LastAlarmChangeStr}}</td>
             <td class="text-left">{{this.UpdateDateStr}}</td>
         </tr>
         {{/each}}

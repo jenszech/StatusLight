@@ -28,7 +28,7 @@ exports.setLocale = function(lightValue) {
 
 function updateStatusFromLocale() {
     //Call Statuslist Callback
-    updateList('Lokal', 1, 'manuel', 'Manueller Alarm', localState);
+    updateList('Lokal', 1, 'manuel', 'Manueller Alarm', localState, 0);
 }
 
 

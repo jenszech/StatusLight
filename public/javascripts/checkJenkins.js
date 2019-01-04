@@ -61,7 +61,7 @@ function updateStatusFromJenkins(json) {
         case 'blue_anime': state = STATUS_LIGHTS.GREEN;
     }
     //Call Statuslist Callback
-    updateList('Jenkins Build', id, json.name, json.name, state);
+    updateList('Jenkins Build', id, json.name, json.name, state, 0);
 }
 
 

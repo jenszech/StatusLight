@@ -31,6 +31,7 @@
       "dtsmon" : {
         "enable": false,
         "alertLight": 3,
+        "alarmDelay": 360,
         "url" : "https://dtsmon.buch.de/index.php?i=monitoring&mode=group&m=504",
         "username" : "INSERT YOUR USERNAME",
         "password" : "INSERT YOUR PASSWORD"

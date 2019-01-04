@@ -90,5 +90,5 @@ function updateStatusDTSMon(json) {
         default: state = myconfig.alertLight;
     }
     //Call Statuslist Callback
-    updateList('DTSMon', id, json.Name, json.Server, state);
+    updateList('DTSMon', id, json.Name, json.Server, state, myconfig.alarmDelay);
 }

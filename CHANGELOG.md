@@ -9,6 +9,9 @@
 
 
 ## Changelog
+### 1.0.0
+* Some code cleanup
+* Introduce a alarm delay for DTSMon checks
 ### 0.9.3
 * Added state related favicon
 * Autoreload of the statuspage an visualisation of last reload timestamp
