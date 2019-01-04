@@ -37,6 +37,7 @@ div.table-title {
   font-family: "Roboto", helvetica, arial, sans-serif;
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   text-transform:uppercase;
+  margin-bottom: 10px;
 }
 
 

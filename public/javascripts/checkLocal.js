@@ -1,4 +1,5 @@
 var config = require('config');
+var os = require('os');
 
 const { STATUS_LIGHTS } = require('./common.js');
 const { loggers } = require('winston')
@@ -28,7 +29,7 @@ exports.setLocale = function(lightValue) {
 
 function updateStatusFromLocale() {
     //Call Statuslist Callback
-    updateList('Lokal', 1, 'manuel', 'Manueller Alarm', localState, 0);
+    updateList(1, os.hostname(), 'Lokal', 'manuel', 'Manueller Alarm', localState, 0);
 }
 
 

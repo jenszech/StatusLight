@@ -9,7 +9,7 @@ const myconfig = config.get('TrafficLight.checkConfig');
 var updateList;
 const options = {
     rejectUnauthorized: false,
-    url: myconfig.grafana.url,
+    url: myconfig.grafana.protocol + "://"+ myconfig.grafana.host + myconfig.grafana.path,
     headers: {
         'User-Agent': 'request',
         'Accept': 'application/json',
@@ -49,7 +49,7 @@ function updateStatusFromGrafana(json) {
             case 'no_data': state = STATUS_LIGHTS.YELLOW;
             case 'ok': state = STATUS_LIGHTS.GREEN;
         }
-        updateList('Grafana Alert', id, json[alert].dashboardSlug, json[alert].name, state, 0);
+        updateList(id, myconfig.grafana.url, 'Grafana Alert', json[alert].dashboardSlug, json[alert].name, state, 0);
     }
 }
 

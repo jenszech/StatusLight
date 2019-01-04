@@ -14,14 +14,18 @@
       },
       "grafana" : {
         "enable": false,
+        "protocol": "https",
+        "host": "YOUR.GRAFANA.HOST",
+        "path": "/api/alerts",
         "alertLight": 3,
-        "url" : "https://YOUR GRAFANA URL/api/alerts",
         "token" : "INSERT YOUR TOKEN HERE"
       },
       "jenkins" : {
         "enable": false,
+        "protocol": "https",
+        "host": "YOUR.JENKINS.HOST",
+        "path": "/jenkins/view/RED/job",
         "alertLight": 2,
-        "url" : "YOUR JENKINS URL/jenkins/view/RED/job",
         "user" : "INSERT USERMAME",
         "password" : "INSERT PASSWORD",
         "jobs" : [
@@ -43,6 +47,16 @@
         "webhook": "INSERT YOUR WEBOOK URL",
         "username": "Traffic light alarm",
         "channel": "INSERT DESTINATION CHANNEL"
+      },
+      "influx": {
+        "enable": true,
+        "databaseHost": "YOUR.INFLUX.HOST",
+        "databasePort": 8086,
+        "databaseProtocol": "https",
+        "schema": "INSERT OUR SCHEMA",
+        "username": "INSERT YOUR USER",
+        "password": "INSERT YOUR PASSWORD"
+
       }
     }
   }

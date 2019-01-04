@@ -8,9 +8,10 @@ const logger = loggers.get('appLogger');
 var statusList = [];
 var updateLightCallback;
 
-var StatusEntry = function(stype, id, sgroup, sname, status) {
-    this.Typ = stype;
+var StatusEntry = function(id, shost, stype, sgroup, sname, status) {
     this.Id = id;
+    this.host = shost;
+    this.Typ = stype;
     this.Group = sgroup;
     this.Name = sname;
     this.Status = STATUS_LIGHTS.get(status);
@@ -26,7 +27,7 @@ var StatusEntry = function(stype, id, sgroup, sname, status) {
  * Init status list
  */
 exports.init = function() {
-    logger.debug(' Statuslist initialisiert');
+    logger.debug('Statuslist initialisiert');
 }
 
 exports.setUpdateCallback = function(callbackFunction) {
@@ -47,8 +48,8 @@ exports.setDisable = function(checkId, isDisabled) {
     }
 }
 
-exports.updateList = function(stype, sId, sgroup, sname, sstatus, delay) {
-    var newStatus = new StatusEntry(stype, sId, sgroup, sname, sstatus);
+exports.updateList = function(sId, shost, stype, sgroup, sname, sstatus, delay) {
+    var newStatus = new StatusEntry(sId, shost, stype, sgroup, sname, sstatus);
     newStatus.DelayAlarm = delay;
     update(newStatus);
 }
@@ -57,7 +58,7 @@ exports.getGesamtStatus = function() {
     var status = STATUS_LIGHTS.GRAY;
     for (var i in statusList) {
         if ((statusList[i].Disabled != true) && (statusList[i].Status.value > status.value)) {
-            logger.debug(statusList[i].Typ + " : "+ statusList[i].LastAlarmChange + " + " + statusList[i].DelayAlarm + " <= " +Date.now());
+            //logger.debug(statusList[i].Typ + " : "+ statusList[i].LastAlarmChange + " + " + statusList[i].DelayAlarm + " <= " +Date.now());
             if ((statusList[i].Status.value <= 1) || (statusList[i].LastAlarmChange + statusList[i].DelayAlarm*1000 <= Date.now())) {
                 status = statusList[i].Status;
             }
@@ -110,5 +111,5 @@ function update(newStatus) {
     if (!found) {
         statusList.push(newStatus);
     }
-    updateLightCallback();
+    updateLightCallback(newStatus);
 }

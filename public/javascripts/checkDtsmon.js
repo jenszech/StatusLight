@@ -13,7 +13,7 @@ exports.setUpdateCallback = function(callbackFunction) {
 }
 
 const jsonReponse = [];
-const columnHeadings = ["Status", "Server", "Name", "IP"];
+const columnHeadings = ["Status", "Server", "Name", "IP", "Group"];
 
 exports.checkStatus = function() {
     checkStatus();
@@ -69,6 +69,7 @@ function processRow(i, row) {
                 rowJson[ columnHeadings[1] ] = cell.attribs.title.replace("Hostname: ", "");
                 rowJson[ columnHeadings[2] ] = $(cell).find('a')[0].children[0].data;
                 rowJson[ columnHeadings[3] ] = $(cell).find('span')[0].children[0].data;
+                rowJson[ columnHeadings[4] ] = rowJson[ columnHeadings[1]].split(".")[0].replace(/\d+/g, '');
             default:
                 break;
         }
@@ -90,5 +91,5 @@ function updateStatusDTSMon(json) {
         default: state = myconfig.alertLight;
     }
     //Call Statuslist Callback
-    updateList('DTSMon', id, json.Name, json.Server, state, myconfig.alarmDelay);
+    updateList(id, json.Server, 'DTSMon', json.Group, json.Name, state, myconfig.alarmDelay);
 }

@@ -5,10 +5,12 @@ var checkGrafana = require('./checkGrafana')
 var checkJenkins = require('./checkJenkins')
 var checkDtsmon = require('./checkDtsmon');
 var reportSlack = require('./reportSlack');
-var lightManager = require('./lightManager');
+var reportTrafficLight = require('./reportTrafficLight');
+var reportInflux = require('./reportInflux');
 var pjson = require('../../package.json');
 var lastLightState = STATUS_LIGHTS.GRAY;
 var config = require('config');
+
 
 const { loggers } = require('winston')
 const logger = loggers.get('appLogger');
@@ -19,14 +21,15 @@ exports.init = function() {
     logger.debug('Debug Logging enabled');
     statuslist.init();
     //Set initial all Lights On
-    lightManager.initLight();
+    reportTrafficLight.initReport();
+    reportInflux.initReport();
 
     //Register Plugins
     checkLocal.setUpdateCallback(statuslist.updateList);
     checkJenkins.setUpdateCallback(statuslist.updateList);
     checkGrafana.setUpdateCallback(statuslist.updateList);
     checkDtsmon.setUpdateCallback(statuslist.updateList);
-    statuslist.setUpdateCallback(updateLight);
+    statuslist.setUpdateCallback(changeTrigger);
 }
 
 exports.runIntervallCheck = function() {
@@ -57,12 +60,18 @@ function runChecks(trigger) {
     logger.info('Check by '+trigger);
 }
 
-function updateLight() {
+function runReports(changedAlarm, lastState, currentState, alertList) {
+    reportSlack.reportStatusChange(changedAlarm, lastState, currentState, alertList);
+    reportTrafficLight.reportStatusChange(changedAlarm, lastState, currentState, alertList);
+    reportInflux.reportStatusChange(changedAlarm, lastState, currentState, alertList);
+}
+
+function changeTrigger(changedAlarm) {
     currentLightState = statuslist.getGesamtStatus();
+    runReports(changedAlarm, lastLightState, currentLightState, statuslist.getAlerts());
     if (currentLightState.value != lastLightState.value) {
         logger.info('Change light from '+lastLightState.key + ' to ' + currentLightState.key);
-        reportSlack.reportStatusChange(lastLightState, currentLightState, statuslist.getAlerts());
         lastLightState = currentLightState;
-        lightManager.setLight(statuslist.getGesamtStatus().value);
     }
 }
+

@@ -28,13 +28,12 @@ function checkStatus(job) {
             'user': myconfig.jenkins.user,
             'pass': myconfig.jenkins.password,
         },
-        url: myconfig.jenkins.url+'/'+job+'/api/json?pretty=true',
+        url: myconfig.jenkins.protocol + "://"+ myconfig.jenkins.host + myconfig.jenkins.path +'/'+job+'/api/json?pretty=true',
         headers: {
             'User-Agent': 'request',
             'Cache-Control': 'no-cache',
         }
     };
-
     request(options, callback);
 }
 
@@ -44,7 +43,7 @@ function callback(error, response, body) {
         const json = JSON.parse(body);
         updateStatusFromJenkins(json);
     } else {
-        logger.error('Error: ',error.toString()) // Print the google web page.
+        logger.error('Error: ',error.message)
     }
 }
 
@@ -61,7 +60,7 @@ function updateStatusFromJenkins(json) {
         case 'blue_anime': state = STATUS_LIGHTS.GREEN;
     }
     //Call Statuslist Callback
-    updateList('Jenkins Build', id, json.name, json.name, state, 0);
+    updateList(id, myconfig.jenkins.url, 'Jenkins Build', json.name, json.name, state, 0);
 }
 
 

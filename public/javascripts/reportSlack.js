@@ -12,8 +12,10 @@ var SlackAttachment = function(color, title, text) {
     this.text = text;
 };
 
-exports.reportStatusChange = function(oldStatus, newStatus, alertList) {
-    checkStatus(oldStatus, newStatus, alertList)
+exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertList) {
+    if (oldStatus.value != newStatus.value) {
+        checkStatus(oldStatus, newStatus, alertList)
+    }
 }
 
 function checkStatus(oldStatus, newStatus, alertList) {
@@ -31,7 +33,7 @@ function checkStatus(oldStatus, newStatus, alertList) {
                 logger.error('Error: ', error);
             }
             if (response.statusCode != 200) {
-                logger.debug("Slack response stauts: "+response.status);
+                logger.debug("Slack response status: "+response.status);
             }
         });
     }
@@ -49,7 +51,7 @@ function getAlertAttachments(alertList) {
             )
         }
     }
-    logger.debug(result);
+    //logger.debug(result);
     return result;
 }
 
