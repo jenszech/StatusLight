@@ -9,7 +9,8 @@ const myconfig = config.get('TrafficLight.checkConfig');
 
 var updateList;
 
-exports.setUpdateCallback = function(callbackFunction) {
+exports.initCheck = function(callbackFunction) {
+    logger.info('=> Init checks - Jenkins (Enabled: '+myconfig.jenkins.enable+')');
     updateList = callbackFunction;
 }
 

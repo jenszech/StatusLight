@@ -19,7 +19,8 @@ const options = {
     }
 };
 
-exports.setUpdateCallback = function(callbackFunction) {
+exports.initCheck = function(callbackFunction) {
+    logger.info('=> Init checks - Grafana (Enabled: '+myconfig.grafana.enable+')');
     updateList = callbackFunction;
 }
 

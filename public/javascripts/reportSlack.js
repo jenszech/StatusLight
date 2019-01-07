@@ -12,6 +12,10 @@ var SlackAttachment = function(color, title, text) {
     this.text = text;
 };
 
+exports.initReport = function() {
+    logger.info('=> Init report - Slack (Enabled: '+myconfig.enable+')');
+}
+
 exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertList) {
     if (oldStatus.value != newStatus.value) {
         checkStatus(oldStatus, newStatus, alertList)

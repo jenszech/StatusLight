@@ -5,9 +5,6 @@
       "pollingIntervall" : 60,
       "env": "default"
     },
-    "lightManager": {
-      "lightsEnabled": true
-    },
     "checkConfig": {
       "local" : {
         "enable": true
@@ -42,6 +39,9 @@
       }
     },
     "reportConfig": {
+      "trafficLight": {
+        "lightsEnabled": true
+      },
       "slack": {
         "enable": false,
         "webhook": "INSERT YOUR WEBOOK URL",
@@ -56,7 +56,9 @@
         "schema": "INSERT OUR SCHEMA",
         "username": "INSERT YOUR USER",
         "password": "INSERT YOUR PASSWORD"
-
+      },
+      "statusHtml": {
+        "insertGrafanaReport": ""
       }
     }
   }

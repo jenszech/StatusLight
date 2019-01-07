@@ -4,12 +4,12 @@ var config = require('config');
 const { loggers } = require('winston')
 const logger = loggers.get('appLogger');
 
-const myconfig = config.get('TrafficLight.lightManager');
+const myconfig = config.get('TrafficLight.reportConfig.trafficLight');
 var currentLight = 0;
-var debug = !myconfig.lightsEnabled;
+var enabled = myconfig.lightsEnabled;
 
 exports.initReport = function() {
-    logger.debug('Init Light (DebugMode: '+debug+')');
+    logger.info('=> Init report - TrafficLight (Enabled: '+enabled+')');
     setOn(1,1,1); //green, yellow, red
 }
 
@@ -24,5 +24,5 @@ exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertL
 }
 
 function setOn(green, yellow, red) {
-    if (!debug) runner.runTrafficLight(green, yellow, red);
+    if (enabled) runner.runTrafficLight(green, yellow, red);
 }

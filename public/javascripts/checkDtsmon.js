@@ -8,7 +8,8 @@ const logger = loggers.get('appLogger');
 const myconfig = config.get('TrafficLight.checkConfig.dtsmon');
 var updateList;
 
-exports.setUpdateCallback = function(callbackFunction) {
+exports.initCheck = function(callbackFunction) {
+    logger.info('=> Init checks - DTSMon (Enabled: '+myconfig.enable+')');
     updateList = callbackFunction;
 }
 

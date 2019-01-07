@@ -46,6 +46,12 @@
         {{statusList.length}} Aktive checks
 </div>
 
+{{#if config.insertGrafanaReport}}
+<div class="table-title">
+    <iframe src="{{config.insertGrafanaReport}}" width="100%" height="200" frameborder="0"></iframe>
+</div>
+{{/if}}
+
 
 <div class="table-title">
     <h3>Status aller aktuellen Überwachungen !</h3>

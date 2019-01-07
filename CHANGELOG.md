@@ -9,6 +9,13 @@
 
 
 ## Changelog
+### 1.2.0
+* Influx Report: Introduce new tag für alarm level
+* Html Report: Insert embedded Grafana Panel (for example shows history of alarm changes)
+* Config clean up
+* Init phase clean up
+
+
 ### 1.1.0
 * Count of checks is displayed
 * Better group namse for DTSMon based on hostname 

@@ -28,7 +28,7 @@ const influx = new Influx.InfluxDB({
 
             },
             tags: [
-                'hostname', 'stage', 'typ', 'role'
+                'hostname', 'stage', 'typ', 'role', 'level'
             ]
         }
     ]
@@ -43,7 +43,7 @@ var InfluxEntry = function(color, title, text) {
 };
 
 exports.initReport = function() {
-    logger.debug('Init Influx');
+    logger.info('=> Init report - Influx (Enabled: '+myconfig.reportConfig.influx.enable+')');
     if (myconfig.reportConfig.influx.enable) {
         influx.getDatabaseNames()
             .then(names => {
@@ -62,11 +62,11 @@ exports.reportStatusChange = function(oldStatus, newStatus, alertList) {
 
 function reportStatus(changedAlarm, lastState, currentState, alertList) {
     if (myconfig.reportConfig.influx.enable) {
-        logger.debug("Influx Export:" +  changedAlarm.Name + ": " + getAlarmValue(changedAlarm));
+        //logger.debug("Influx Export:" +  changedAlarm.Name + ": " + getAlarmValue(changedAlarm));
         influx.writePoints([
             {
                 measurement: 'statusmonitor',
-                tags: { hostname: changedAlarm.Name, stage: myconfig.mainSetting.env, typ:changedAlarm.Typ , role: changedAlarm.Group},
+                tags: { hostname: changedAlarm.Name, stage: myconfig.mainSetting.env, typ:changedAlarm.Typ , role: changedAlarm.Group, level:getAlarmLevel(changedAlarm)},
                 fields: { state: getAlarmValue(changedAlarm), name: changedAlarm.Name },
             }
         ]).catch(err => {
@@ -84,10 +84,22 @@ function getAlarmValue(status) {
             return 1
             break;
         case 3:
-            return 2
+            return 1
             break;
-
         default:
             return 0;
+    }
+}
+
+function getAlarmLevel(status) {
+    switch(status.Status.value) {
+        case 2:
+            return "Warning"
+            break;
+        case 3:
+            return "Alarm"
+            break;
+        default:
+            return "Ok";
     }
 }

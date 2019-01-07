@@ -18,18 +18,24 @@ const myconfig = config.get('TrafficLight.mainSetting');
 
 exports.init = function() {
     logger.info("StatusAmpel v"+pjson.version + ' ('+myconfig.env+')');
-    logger.debug('Debug Logging enabled');
+    logger.info('Init');
+    logger.debug('=> Logging (Debug enabled)');
     statuslist.init();
-    //Set initial all Lights On
-    reportTrafficLight.initReport();
+
+    //Init Reports
+    reportSlack.initReport();
+    reportTrafficLight.initReport();    //Set initial all Lights On
     reportInflux.initReport();
 
-    //Register Plugins
-    checkLocal.setUpdateCallback(statuslist.updateList);
-    checkJenkins.setUpdateCallback(statuslist.updateList);
-    checkGrafana.setUpdateCallback(statuslist.updateList);
-    checkDtsmon.setUpdateCallback(statuslist.updateList);
+    //Init Checks
+    checkLocal.initCheck(statuslist.updateList);
+    checkJenkins.initCheck(statuslist.updateList);
+    checkGrafana.initCheck(statuslist.updateList);
+    checkDtsmon.initCheck(statuslist.updateList);
+
+    //Register Update Callback
     statuslist.setUpdateCallback(changeTrigger);
+    logger.info('Init completed');
 }
 
 exports.runIntervallCheck = function() {

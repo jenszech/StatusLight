@@ -9,7 +9,8 @@ const myconfig = config.get('TrafficLight.checkConfig');
 var updateList;
 var localState = STATUS_LIGHTS.GRAY;
 
-exports.setUpdateCallback = function(callbackFunction) {
+exports.initCheck = function(callbackFunction) {
+    logger.info('=> Init checks - manuel (Enabled: '+myconfig.local.enable+')');
     updateList = callbackFunction;
 }
 

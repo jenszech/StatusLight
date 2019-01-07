@@ -27,7 +27,7 @@ var StatusEntry = function(id, shost, stype, sgroup, sname, status) {
  * Init status list
  */
 exports.init = function() {
-    logger.debug('Statuslist initialisiert');
+    logger.info('=> Statuslist initialisiert');
 }
 
 exports.setUpdateCallback = function(callbackFunction) {
