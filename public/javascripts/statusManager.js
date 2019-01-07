@@ -6,6 +6,7 @@ var checkJenkins = require('./checkJenkins')
 var checkDtsmon = require('./checkDtsmon');
 var reportSlack = require('./reportSlack');
 var reportTrafficLight = require('./reportTrafficLight');
+var reportHue = require('./reportHUE');
 var reportInflux = require('./reportInflux');
 var pjson = require('../../package.json');
 var lastLightState = STATUS_LIGHTS.GRAY;
@@ -25,6 +26,7 @@ exports.init = function() {
     //Init Reports
     reportSlack.initReport();
     reportTrafficLight.initReport();    //Set initial all Lights On
+    reportHue.initReport();
     reportInflux.initReport();
 
     //Init Checks
@@ -63,12 +65,13 @@ function runChecks(trigger) {
     checkGrafana.checkStatus();
     checkJenkins.checkStatus();
     checkDtsmon.checkStatus();
-    logger.info('Check by '+trigger);
+    logger.debug('Check by '+trigger);
 }
 
 function runReports(changedAlarm, lastState, currentState, alertList) {
     reportSlack.reportStatusChange(changedAlarm, lastState, currentState, alertList);
     reportTrafficLight.reportStatusChange(changedAlarm, lastState, currentState, alertList);
+    reportHue.reportStatusChange(changedAlarm, lastState, currentState, alertList);
     reportInflux.reportStatusChange(changedAlarm, lastState, currentState, alertList);
 }
 

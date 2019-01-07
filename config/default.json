@@ -42,6 +42,11 @@
       "trafficLight": {
         "lightsEnabled": true
       },
+      "hueLight": {
+        "lightsEnabled": true,
+        "bridgeUrl": "",
+        "username": ""
+      },
       "slack": {
         "enable": false,
         "webhook": "INSERT YOUR WEBOOK URL",

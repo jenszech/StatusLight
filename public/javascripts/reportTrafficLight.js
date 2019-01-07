@@ -17,7 +17,6 @@ exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertL
     if (oldStatus.value != newStatus.value) {
         light = newStatus.value;
         if (currentLight != light) {
-            light == 1 ? 1 : 0
             setOn(light == 1 ? 1 : 0, light == 2 ? 1 : 0, light == 3 ? 1 : 0)
         }
     }
