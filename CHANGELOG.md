@@ -9,6 +9,9 @@
 
 
 ## Changelog
+### 1.3.1
+* New Philips HUE Reporter
+
 ### 1.2.0
 * Influx Report: Introduce new tag für alarm level
 * Html Report: Insert embedded Grafana Panel (for example shows history of alarm changes)
