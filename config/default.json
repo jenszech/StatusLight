@@ -43,9 +43,10 @@
         "lightsEnabled": true
       },
       "hueLight": {
-        "lightsEnabled": true,
+        "lightsEnabled": false,
         "bridgeUrl": "",
-        "username": ""
+        "username": "",
+        "lightIds": []
       },
       "slack": {
         "enable": false,
