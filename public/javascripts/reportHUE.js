@@ -125,7 +125,7 @@ function getLightColor(status) {
             return 32000
             break;
         case 2:
-            return 8000
+            return 7350
             break;
         case 3:
             return 64000
