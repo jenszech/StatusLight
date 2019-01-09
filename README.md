@@ -10,11 +10,16 @@ Der Status wird auf einer USB Ampel visualisiert.
 
 ## Features
 
-* Anbindung beliebiger Dienst
+* Anbindung beliebiger Monitoring und Alarming Dienste
     * Grafana Alerts Anbindung per Polling
     * Jenkins Jobs Anbindung per Polling
     * DTSMon Anbindung per WebCrawling
-* WebInterface für einen detailierten Einblick in die Einzelstatus abfragen
+* Visulisierung und Alarming über unterschiedliche Reporter möglich
+    * WebInterface für einen detailierten Einblick in die Einzelstatus abfragen
+    * Alarmmeldungen im Slack Channel
+    * Visualisierung über eine USB Ampel
+    * Visualisierung über Philips HUE Lampen
+    * Alarmmeldung können in einer InfluxDB archiviert & visualisiert werden.
 * Pausieren einzelner Alarme mit automatischer Reaktivierung bei nächstem Status Wechsel
 * Serverbetrieb
     * Unterstützt Serverbetrieb inkl. Prozessmanagement & Autostart nach Reboot
@@ -135,23 +140,24 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
       "pollingIntervall" : 60,
       "env": "default"
     },
-    "lightManager": {
-      "lightsEnabled": true
-    },
     "checkConfig": {
       "local" : {
         "enable": true
       },
       "grafana" : {
         "enable": false,
+        "protocol": "https",
+        "host": "YOUR.GRAFANA.HOST",
+        "path": "/api/alerts",
         "alertLight": 3,
-        "url" : "https://YOUR GRAFANA URL/api/alerts",
         "token" : "INSERT YOUR TOKEN HERE"
       },
       "jenkins" : {
         "enable": false,
+        "protocol": "https",
+        "host": "YOUR.JENKINS.HOST",
+        "path": "/jenkins/view/RED/job",
         "alertLight": 2,
-        "url" : "https://YOUR JENKINS URL/jenkins/view/RED/job",
         "user" : "INSERT USERMAME",
         "password" : "INSERT PASSWORD",
         "jobs" : [
@@ -161,17 +167,39 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
       "dtsmon" : {
         "enable": false,
         "alertLight": 3,
+        "alarmDelay": 360,
         "url" : "https://dtsmon.buch.de/index.php?i=monitoring&mode=group&m=504",
         "username" : "INSERT YOUR USERNAME",
         "password" : "INSERT YOUR PASSWORD"
       }
     },
     "reportConfig": {
+      "trafficLight": {
+        "lightsEnabled": true
+      },
+      "hueLight": {
+        "lightsEnabled": false,
+        "bridgeUrl": "",
+        "username": "",
+        "lightIds": []
+      },
       "slack": {
         "enable": false,
         "webhook": "INSERT YOUR WEBOOK URL",
         "username": "Traffic light alarm",
         "channel": "INSERT DESTINATION CHANNEL"
+      },
+      "influx": {
+        "enable": false,
+        "databaseHost": "YOUR.INFLUX.HOST",
+        "databasePort": 8086,
+        "databaseProtocol": "https",
+        "schema": "INSERT OUR SCHEMA",
+        "username": "INSERT YOUR USER",
+        "password": "INSERT YOUR PASSWORD"
+      },
+      "statusHtml": {
+        "insertGrafanaReport": ""
       }
     }
   }
@@ -184,9 +212,6 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
   "TrafficLight": {
     "mainSetting": {
       "env": "Production"
-    },
-    "lightManager": {
-      "lightsEnabled": true
     },
     "checkConfig": {
       "grafana": {
@@ -201,6 +226,16 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
           "qa_nightly",
           "qa_selenium_nightly"
         ]
+      }
+    },
+    "reportConfig": {
+      "trafficLight": {
+        "lightsEnabled": true
+      },
+      "slack": {
+        "enable": false,
+        "webhook": "INSERT YOUR WEBOOK URL",
+        "channel": "#monitoring"
       }
     }
   }

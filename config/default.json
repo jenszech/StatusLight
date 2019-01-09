@@ -40,7 +40,7 @@
     },
     "reportConfig": {
       "trafficLight": {
-        "lightsEnabled": true
+        "lightsEnabled": false
       },
       "hueLight": {
         "lightsEnabled": false,
@@ -55,7 +55,7 @@
         "channel": "INSERT DESTINATION CHANNEL"
       },
       "influx": {
-        "enable": true,
+        "enable": false,
         "databaseHost": "YOUR.INFLUX.HOST",
         "databasePort": 8086,
         "databaseProtocol": "https",

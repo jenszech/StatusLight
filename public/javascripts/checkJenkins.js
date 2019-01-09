@@ -53,12 +53,24 @@ function updateStatusFromJenkins(json) {
     var id = hash(json.fullName);
     var state = 0;
     switch (json.color) {
-        case 'red': state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
-        case 'yellow': state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
-        case 'blue': state = STATUS_LIGHTS.GREEN;
-        case 'red_anime': state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
-        case 'yellow_anime': state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
-        case 'blue_anime': state = STATUS_LIGHTS.GREEN;
+        case 'red':
+            state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
+            break;
+        case 'yellow':
+            state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
+            break;
+        case 'blue':
+            state = STATUS_LIGHTS.GREEN;
+            break;
+        case 'red_anime':
+            state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
+            break;
+        case 'yellow_anime':
+            state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
+            break;
+        case 'blue_anime':
+            state = STATUS_LIGHTS.GREEN;
+            break;
     }
     //Call Statuslist Callback
     updateList(id, myconfig.jenkins.url, 'Jenkins Build', json.name, json.name, state, 0);
