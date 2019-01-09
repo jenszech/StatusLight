@@ -57,7 +57,9 @@ exports.initReport = function() {
 
 
 exports.reportStatusChange = function(oldStatus, newStatus, alertList) {
-    reportStatus(oldStatus, newStatus, alertList)
+    if (oldStatus.value != newStatus.value) {
+        reportStatus(oldStatus, newStatus, alertList)
+    }
 }
 
 function reportStatus(changedAlarm, lastState, currentState, alertList) {

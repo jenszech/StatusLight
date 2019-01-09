@@ -32,12 +32,12 @@ function checkStatus(oldStatus, newStatus, alertList) {
             username: myconfig.username,
             text: "Monitoring status changed from " + oldStatus.key + " to " + newStatus.key,
             attachments: getAlertAttachments(alertList)
-        }, function(error, response) {
+        }, function (error, response) {
             if (error != null) {
                 logger.error('Error: ', error);
             }
             if (response.statusCode != 200) {
-                logger.debug("Slack response status: "+response.status);
+                logger.debug("Slack response status: " + response.status);
             }
         });
     }
