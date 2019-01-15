@@ -1,9 +1,12 @@
-var express = require('express');
-var statusMgr = require('../public/javascripts/statusManager');
-var router = express.Router();
+"use strict"
 
+var express = require('express');
+var router = express.Router();
+const statusMgr = require('../public/javascripts/statusManager');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

@@ -1,11 +1,13 @@
-var config = require('config');
-var os = require('os');
+"use strict"
 
+const config = require('config');
+const os = require('os');
 const { STATUS_LIGHTS } = require('./common.js');
 const { loggers } = require('winston')
-const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.checkConfig');
 
+const logger = loggers.get('appLogger');
+
+var myconfig = config.get('TrafficLight.checkConfig');
 var updateList;
 var localState = STATUS_LIGHTS.GRAY;
 

@@ -1,10 +1,13 @@
-var config = require('config');
+"use strict"
+
+const config = require('config');
 const Influx = require('influx');
 const { loggers } = require('winston')
-const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight');
-var updateList;
 
+const logger = loggers.get('appLogger');
+
+var myconfig = config.get('TrafficLight');
+var updateList;
 
 const influx = new Influx.InfluxDB({
     hosts: [{

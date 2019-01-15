@@ -1,12 +1,15 @@
-var request = require('request');
-var config = require('config');
+"use strict"
 
+const request = require('request');
+const config = require('config');
 const { STATUS_LIGHTS } = require('./common.js');
 const { loggers } = require('winston')
-const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.checkConfig');
 
+const logger = loggers.get('appLogger');
+
+var myconfig = config.get('TrafficLight.checkConfig');
 var updateList;
+
 const options = {
     rejectUnauthorized: false,
     url: myconfig.grafana.protocol + "://"+ myconfig.grafana.host + myconfig.grafana.path,

@@ -9,6 +9,13 @@
 
 
 ## Changelog
+### 1.3.4
+* Change declaration to "use strict"
+* Bugfix: Some litte Bugs removed
+
+### 1.3.3
+* Bugfix issue  #1
+
 ### 1.3.2
 * Bugfix: Jenkins Check ignore alarm values
 

@@ -40,7 +40,8 @@
     },
     "reportConfig": {
       "trafficLight": {
-        "lightsEnabled": false
+        "lightsEnabled": false,
+        "lightId": 0
       },
       "hueLight": {
         "lightsEnabled": false,

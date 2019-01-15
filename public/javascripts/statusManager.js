@@ -1,21 +1,24 @@
-var statuslist = require('./statuslist')
+"use strict"
+
+const statuslist = require('./statuslist')
 const { STATUS_LIGHTS } = require('./common.js');
-var checkLocal = require('./checkLocal')
-var checkGrafana = require('./checkGrafana')
-var checkJenkins = require('./checkJenkins')
-var checkDtsmon = require('./checkDtsmon');
-var reportSlack = require('./reportSlack');
-var reportTrafficLight = require('./reportTrafficLight');
-var reportHue = require('./reportHUE');
-var reportInflux = require('./reportInflux');
-var pjson = require('../../package.json');
-var lastLightState = STATUS_LIGHTS.GRAY;
-var config = require('config');
-
-
+const checkLocal = require('./checkLocal')
+const checkGrafana = require('./checkGrafana')
+const checkJenkins = require('./checkJenkins')
+const checkDtsmon = require('./checkDtsmon');
+const reportSlack = require('./reportSlack');
+const reportTrafficLight = require('./reportTrafficLight');
+const reportHue = require('./reportHUE');
+const reportInflux = require('./reportInflux');
+const pjson = require('../../package.json');
+const config = require('config');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.mainSetting');
+
+var lastLightState = STATUS_LIGHTS.GRAY;
+
+var myconfig = config.get('TrafficLight.mainSetting');
 
 exports.init = function() {
     logger.info("StatusAmpel v"+pjson.version + ' ('+myconfig.env+')');
@@ -76,7 +79,7 @@ function runReports(changedAlarm, lastState, currentState, alertList) {
 }
 
 function changeTrigger(changedAlarm) {
-    currentLightState = statuslist.getGesamtStatus();
+    var currentLightState = statuslist.getGesamtStatus();
     runReports(changedAlarm, lastLightState, currentLightState, statuslist.getAlerts());
     if (currentLightState.value != lastLightState.value) {
         logger.info('Change light from '+lastLightState.key + ' to ' + currentLightState.key);

@@ -1,3 +1,5 @@
+"use strict"
+
 var Enum = require('enum');
 
 var STATUS_LIGHTS = new Enum({

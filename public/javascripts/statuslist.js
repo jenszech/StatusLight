@@ -1,8 +1,10 @@
+"use strict"
 
-var express = require('express');
-var dateFormat = require('dateformat');
+const express = require('express');
+const dateFormat = require('dateformat');
 const { STATUS_LIGHTS } = require('./common.js');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
 
 var statusList = [];
@@ -88,10 +90,10 @@ function setState(status, newStatus) {
         }
         if ((newStatus.Status.value > 1) && (status.Status.value <= 1)) {
             status.LastAlarmChange = Date.now();
-            status.LastAlarmChangeStr = dateFormat(statusList[i].LastAlarmChange, 'dd.mm.yyyy HH:MM');
+            status.LastAlarmChangeStr = dateFormat(status.LastAlarmChange, 'dd.mm.yyyy HH:MM');
         } else if ((newStatus.Status.value <= 1)) {
             status.LastAlarmChange = Date.now();
-            status.LastAlarmChangeStr = dateFormat(statusList[i].LastAlarmChange, 'dd.mm.yyyy HH:MM');
+            status.LastAlarmChangeStr = dateFormat(status.LastAlarmChange, 'dd.mm.yyyy HH:MM');
         }
     }
     status.Status = newStatus.Status;

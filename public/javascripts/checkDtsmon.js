@@ -1,11 +1,14 @@
-var request = require('request');
-var hash = require('string-hash');
-var cheerio = require('cheerio');
-var config = require('config');
+"use strict"
 
+const request = require('request');
+const hash = require('string-hash');
+const cheerio = require('cheerio');
+const  config = require('config');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.checkConfig.dtsmon');
+
+var myconfig = config.get('TrafficLight.checkConfig.dtsmon');
 var updateList;
 
 exports.initCheck = function(callbackFunction) {
@@ -40,7 +43,7 @@ function checkStatus() {
 function callbackStatusCheck(error, response, body) {
     jsonReponse.length = 0;
     if (!error && response.statusCode == 200) {
-            $ = cheerio.load(body);
+            let $ = cheerio.load(body);
 
         $("#hostlist").each(function(i, table) {
             var trs = $(table).find('tr')
@@ -48,7 +51,7 @@ function callbackStatusCheck(error, response, body) {
             $(table).find('tr').each(processRow)
         })
 
-        for (i in jsonReponse) {
+        for (var i in jsonReponse) {
             updateStatusDTSMon(jsonReponse[i]);
         }
     } else {
@@ -57,9 +60,9 @@ function callbackStatusCheck(error, response, body) {
 }
 
 function processRow(i, row) {
-    rowJson = {}
+    var rowJson = {}
     //logger.debug(row);
-
+    let $ = cheerio.load(row);
     $(row).find('td').each(function(j, cell) {
         //logger.debug(cell);
         switch (j) {

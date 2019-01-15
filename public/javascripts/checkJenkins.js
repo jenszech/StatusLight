@@ -1,12 +1,14 @@
-var request = require('request');
-var hash = require('string-hash');
-var config = require('config');
+"use strict"
 
+const request = require('request');
+const hash = require('string-hash');
+const config = require('config');
 const { STATUS_LIGHTS } = require('./common.js');
 const { loggers } = require('winston')
-const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.checkConfig');
 
+const logger = loggers.get('appLogger');
+
+var myconfig = config.get('TrafficLight.checkConfig');
 var updateList;
 
 exports.initCheck = function(callbackFunction) {
@@ -16,7 +18,7 @@ exports.initCheck = function(callbackFunction) {
 
 exports.checkStatus = function() {
     if (myconfig.jenkins.enable) {
-        for (i in myconfig.jenkins.jobs) {
+        for (var i in myconfig.jenkins.jobs) {
             checkStatus(myconfig.jenkins.jobs[i]);
         }
     }

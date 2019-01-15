@@ -1,10 +1,13 @@
-var config = require('config');
-let huejay = require('huejay');
-const { loggers } = require('winston');
-const logger = loggers.get('appLogger');
-var configFile = 'config/philips-hue.json';
+"use strict"
 
-const myconfig = config.get('TrafficLight.reportConfig.hueLight');
+const config = require('config');
+const huejay = require('huejay');
+const { loggers } = require('winston');
+
+const logger = loggers.get('appLogger');
+
+var configFile = 'config/philips-hue.json';
+var myconfig = config.get('TrafficLight.reportConfig.hueLight');
 
 var LightEntry = function(id, on, hue, brightness, saturation) {
     this.id = id;
@@ -54,7 +57,7 @@ exports.initReport = function() {
 }
 
 exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertList) {
-    if (oldStatus.value != newStatus.value) {
+    if (enabled && (oldStatus.value != newStatus.value)) {
         logger.debug(`Hue - State change: ${oldStatus.value} != ${newStatus.value}`);
         //Save light state bevor alarm
         if ((oldStatus.value <= 1) && (newStatus.value > 1)) {

@@ -1,9 +1,12 @@
-var Slack = require('slack-node');
-var config = require('config');
+"use strict"
 
+const Slack = require('slack-node');
+const config = require('config');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
-const myconfig = config.get('TrafficLight.reportConfig.slack');
+
+var myconfig = config.get('TrafficLight.reportConfig.slack');
 var updateList;
 
 var SlackAttachment = function(color, title, text) {
@@ -24,7 +27,7 @@ exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertL
 
 function checkStatus(oldStatus, newStatus, alertList) {
     if (myconfig.enable) {
-        slack = new Slack();
+        let slack = new Slack();
         slack.setWebhook(myconfig.webhook);
 
         slack.webhook({
@@ -44,7 +47,7 @@ function checkStatus(oldStatus, newStatus, alertList) {
 }
 
 function getAlertAttachments(alertList) {
-    result = [];
+    let result = [];
     if (alertList.length > 0) {
         for (var i in alertList) {
             result.push( new SlackAttachment(

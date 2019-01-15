@@ -1,13 +1,16 @@
+"use strict"
+
 var express = require('express');
-var statusMgr = require('../public/javascripts/statusManager');
-var dateFormat = require('dateformat');
 var router = express.Router();
-var config = require('config');
-
-const myconfig = config.get('TrafficLight.reportConfig.statusHtml');
-
+const config = require('config');
+const dateFormat = require('dateformat');
+const statusMgr = require('../public/javascripts/statusManager');
 const { loggers } = require('winston')
+
 const logger = loggers.get('appLogger');
+
+var myconfig = config.get('TrafficLight.reportConfig.statusHtml');
+
 
 /* GET status listing. */
 router.get('/', function(req, res, next) {
