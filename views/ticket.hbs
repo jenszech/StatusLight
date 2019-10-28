@@ -1,0 +1,46 @@
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+
+
+<div class="table-title">
+    <h3>Alle Tickets im Sprint</h3>
+</div>
+<table class="table-fill">
+    <thead>
+    <tr>
+        <th class="text-left">Sprint</th>
+        <th class="text-left"></th>
+        <th class="text-left">Id</th>
+        <th class="text-left">Name</th>
+        <th class="text-left"></th>
+        <th class="text-left">SP</th>
+        <th class="text-left">Last Update</th>
+    </tr>
+    </thead>
+    <tbody class="table-hover">
+        {{#each ticketList}}
+        <tr>
+            <td class="text-left">{{this.Sprint.Name}}</td>
+            <td class="text-center"><img src="{{this.TypUrl}}" alt="{{this.Typ}}"></td>
+            <td class="text-left">
+                {{#if this.isFinished}}
+                    <del>{{this.Key}}</del>
+                {{^}}
+                    {{this.Key}}
+                {{/if}}
+            </td>
+            <td class="text-left">
+                {{#if this.isFinished}}
+                    <del>{{this.Summary}}</del>
+                {{^}}
+                    {{this.Summary}}
+                {{/if}}
+            </td>
+            <td class="text-center"><img src="{{this.StatusUrl}}" alt="{{this.Status}}"></td>
+            <td class="text-center">{{this.StoryPoints}}</td>
+            <td class="text-left">{{this.TicketUpdatedStr}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div>Last Reload: {{reloadTime}}</div>

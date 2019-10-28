@@ -18,9 +18,9 @@ var StatusEntry = function(id, shost, stype, sgroup, sname, status) {
     this.Name = sname;
     this.Status = STATUS_LIGHTS.get(status);
     this.UpdateDate = Date.now();
-    this.UpdateDateStr = dateFormat(this.UpdateDate, 'dd.mm.yyyy HH:MM');
+    this.UpdateDateStr = function() {return dateFormat(this.UpdateDate, 'dd.mm.yyyy HH:MM');}
     this.LastAlarmChange = Date.now();
-    this.LastAlarmChangeStr = dateFormat(this.LastAlarmChange, 'dd.mm.yyyy HH:MM');
+    this.LastAlarmChangeStr = function() {return dateFormat(this.LastAlarmChange, 'dd.mm.yyyy HH:MM');}
     this.DelayAlarm = 0;
     this.Disabled = false;
 };
@@ -90,10 +90,8 @@ function setState(status, newStatus) {
         }
         if ((newStatus.Status.value > 1) && (status.Status.value <= 1)) {
             status.LastAlarmChange = Date.now();
-            status.LastAlarmChangeStr = dateFormat(status.LastAlarmChange, 'dd.mm.yyyy HH:MM');
         } else if ((newStatus.Status.value <= 1)) {
             status.LastAlarmChange = Date.now();
-            status.LastAlarmChangeStr = dateFormat(status.LastAlarmChange, 'dd.mm.yyyy HH:MM');
         }
     }
     status.Status = newStatus.Status;
@@ -105,7 +103,6 @@ function update(newStatus) {
         if ((statusList[i].Typ == newStatus.Typ) && (statusList[i].Id == newStatus.Id)) {
             setState(statusList[i], newStatus)
             statusList[i].UpdateDate = Date.now();
-            statusList[i].UpdateDateStr = dateFormat(statusList[i].UpdateDate, 'yyyy-mm-dd HH:MM');
             found = true;
             break; //Stop this loop, we found it!
         }

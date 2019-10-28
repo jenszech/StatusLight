@@ -62,7 +62,7 @@ if (process.env.NODE_ENV !== 'prod') {
 logger.stream = {
     write: function(message, encoding) {
         // use the 'info' log level so the output will be picked up by both transports (file and console)
-        logger.info(message);
+        logger.debug(message);
     },
 };
 

@@ -1,5 +1,5 @@
 "use strict"
-
+const dateFormat = require('dateformat');
 var Enum = require('enum');
 
 var STATUS_LIGHTS = new Enum({
@@ -9,6 +9,46 @@ var STATUS_LIGHTS = new Enum({
     'RED':3
 });
 
+var SprintEntry = function(id) {
+    this.Id = id;
+    this.Name = null;
+    this.Goal = null;
+    this.Start = null;
+    this.StartStr = function() {return dateFormat(this.Start, 'dd.mm.yyyy HH:MM');}
+    this.End = null;
+    this.EndStr = null;
+    this.EndStr = function() {return dateFormat(this.End, 'dd.mm.yyyy HH:MM');}
+    this.State = null;
+    this.UpdateDate = Date.now();
+    this.UpdateDateStr = function() {return dateFormat(this.UpdateDate, 'dd.mm.yyyy HH:MM');}
+};
+
+var TicketEntry = function(id) {
+    this.Id = id;
+    this.Sprint = null;
+    this.Key = null;
+    this.Summary = null;
+    this.Typ = null;
+    this.TypUrl = null;
+    this.EpicId = null;
+    this.EpicName = null;
+    this.Reporter = null;
+    this.ReporterUrl = null;
+    this.Assignee = null;
+    this.AssigneeUrl = null;
+    this.Status = null;
+    this.StatusUrl = null;
+    this.StoryPoints = null;
+    this.TicketCreated = null;
+    this.TicketCreatedStr = function() {return dateFormat(this.TicketCreated, 'dd.mm.yyyy HH:MM');}
+    this.TicketUpdated = null;
+    this.TicketUpdatedStr = function() {return dateFormat(this.TicketUpdated, 'dd.mm.yyyy HH:MM');}
+    this.isFinished = function() {return this.Status == "Fertig";}
+}
+
+
 module.exports = {
-    STATUS_LIGHTS
+    STATUS_LIGHTS,
+    SprintEntry,
+    TicketEntry
 };

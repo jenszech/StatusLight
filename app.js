@@ -8,6 +8,7 @@ var winston = require('./config/winston');
 var indexRouter = require('./routes/index');
 var statusRouter = require('./routes/status');
 var adminRouter = require('./routes/admin');
+var ticketRouter = require('./routes/ticket');
 var statusManager = require('./public/javascripts/statusManager');
 
 var app = express();
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/status', statusRouter);
 app.use('/admin', adminRouter);
+app.use('/ticket', ticketRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

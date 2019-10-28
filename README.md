@@ -99,6 +99,12 @@ git clone ssh://xxx@vm-build1p.buch.de:29418/StatusAmpel
 cd StatusAmpel
 npm install
 ```
+
+#### Instalation der Audio Unterstützung
+```
+sudo apt-get install alsa-base alsa-utils
+```
+
 #### Einrichten als Hintergrundprocess
 Einrichten als Process mit Autostart
 ```

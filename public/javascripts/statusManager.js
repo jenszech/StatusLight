@@ -1,15 +1,18 @@
 "use strict"
 
 const statuslist = require('./statuslist')
+const ticketlist = require('./ticketlist')
 const { STATUS_LIGHTS } = require('./common.js');
 const checkLocal = require('./checkLocal')
 const checkGrafana = require('./checkGrafana')
 const checkJenkins = require('./checkJenkins')
 const checkDtsmon = require('./checkDtsmon');
+const checkJira = require('./checkJira');
 const reportSlack = require('./reportSlack');
 const reportTrafficLight = require('./reportTrafficLight');
 const reportHue = require('./reportHUE');
 const reportInflux = require('./reportInflux');
+const reportSoundPlayer = require('./reportSoundPlayer')
 const pjson = require('../../package.json');
 const config = require('config');
 const { loggers } = require('winston')
@@ -25,12 +28,14 @@ exports.init = function() {
     logger.info('Init');
     logger.debug('=> Logging (Debug enabled)');
     statuslist.init();
+    ticketlist.init();
 
     //Init Reports
     reportSlack.initReport();
     reportTrafficLight.initReport();    //Set initial all Lights On
     reportHue.initReport();
     reportInflux.initReport();
+    reportSoundPlayer.initReport();
 
     //Init Checks
     checkLocal.initCheck(statuslist.updateList);
@@ -38,8 +43,11 @@ exports.init = function() {
     checkGrafana.initCheck(statuslist.updateList);
     checkDtsmon.initCheck(statuslist.updateList);
 
+    checkJira.initCheck(ticketlist.updateList);
+
     //Register Update Callback
-    statuslist.setUpdateCallback(changeTrigger);
+    statuslist.setUpdateCallback(changeAlarmTrigger);
+    ticketlist.setUpdateCallback(changeNotifyTrigger);
     logger.info('Init completed');
 }
 
@@ -59,6 +67,10 @@ exports.getStatusList = function() {
     return statuslist;
 }
 
+exports.getTicketList = function() {
+    return ticketlist;
+}
+
 exports.setLocal = function(lightValue) {
     checkLocal.setLocale(parseInt(lightValue, 10));
 }
@@ -68,6 +80,7 @@ function runChecks(trigger) {
     checkGrafana.checkStatus();
     checkJenkins.checkStatus();
     checkDtsmon.checkStatus();
+    checkJira.checkStatus();
     logger.debug('Check by '+trigger);
 }
 
@@ -78,7 +91,7 @@ function runReports(changedAlarm, lastState, currentState, alertList) {
     reportInflux.reportStatusChange(changedAlarm, lastState, currentState, alertList);
 }
 
-function changeTrigger(changedAlarm) {
+function changeAlarmTrigger(changedAlarm) {
     var currentLightState = statuslist.getGesamtStatus();
     runReports(changedAlarm, lastLightState, currentLightState, statuslist.getAlerts());
     if (currentLightState.value != lastLightState.value) {
@@ -87,3 +100,6 @@ function changeTrigger(changedAlarm) {
     }
 }
 
+function changeNotifyTrigger(changedValue) {
+    reportSoundPlayer.reportStatusChange(changedValue);
+}
