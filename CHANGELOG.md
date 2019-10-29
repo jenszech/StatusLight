@@ -9,11 +9,13 @@
 
 
 ## Changelog
+### 1.4.1
+* Make loglevel configurable
+
 ### 1.4.0
 * New introduce notifyer
 * Report Jira status change as notify
 * Report notify with new sound integration
-
 
 ### 1.3.4
 * Change declaration to "use strict"

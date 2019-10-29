@@ -3,7 +3,8 @@
     "mainSetting": {
       "pollingEnabled": true,
       "pollingIntervall" : 60,
-      "env": "default"
+      "env": "default",
+      "logLevel": "info"
     },
     "checkConfig": {
       "local" : {

@@ -1,9 +1,12 @@
 var appRoot = require('app-root-path');
+const config = require('config');
 const { createLogger, loggers, format, transports } = require('winston');
+
+var myconfig = config.get('TrafficLight.mainSetting');
 
 var options = {
     file: {
-        level: 'info',
+        level: myconfig.logLevel,
         filename: `${appRoot}/logs/app.log`,
         handleExceptions: true,
         humanReadableUnhandledException: true,

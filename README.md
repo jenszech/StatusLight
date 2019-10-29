@@ -267,6 +267,7 @@ pm2 restart statusLight
 ```
 cd StatusAmpel
 git pull
+npm update
 pm2 restart statusLight
 ```
 
