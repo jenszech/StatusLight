@@ -16,9 +16,9 @@ exports.initReport = function() {
 exports.reportStatusChange = function(changedTicket) {
     if (myconfig.enable) {
         if (changedTicket.isFinished()) {
-            player.playFile(path.resolve('./public/sound/trex.mp3'))
+            player.playFile(path.resolve('./public/sound/'+myconfig.finishFile))
         } else {
-            player.playFile(path.resolve('./public/sound/party_horn.mp3'))
+            player.playFile(path.resolve('./public/sound/'.changeFile))
         }
     }
 }

@@ -6,9 +6,10 @@ const statusMgr = require('../public/javascripts/statusManager');
 var player = require("../public/javascripts/runSound");
 var path = require('path');
 const { loggers } = require('winston')
+const config = require('config');
 
 const logger = loggers.get('appLogger');
-
+var myconfig = config.get('TrafficLight.reportConfig.soundPlayer');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -41,11 +42,10 @@ router.post('/', function(req, res, next) {
     if (req.body.action == "playSound") {
         logger.debug('=> playSound');
         if (req.body.actionId == "1") {
-            player.playFile(path.resolve('./public/sound/party_horn.mp3'))
+            player.playFile(path.resolve('./public/sound/'+myconfig.changeFile))
         }
         if (req.body.actionId == "2") {
-            var file = path.resolve('./public/sound/trex.mp3');
-            player.playFile(file);
+            player.playFile(path.resolve('./public/sound/'+myconfig.finishFile))
         }
 
         res.end('{"success" : "Updated Successfully", "status" : 200}');
