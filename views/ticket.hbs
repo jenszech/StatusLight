@@ -1,5 +1,37 @@
 <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script type="text/javascript">
+    function sendAdminCmd(action, actionId) {
+        console.log(action)
+        console.log(actionId)
+        $.ajax({
+            url: "/admin",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            data: {
+                action: action,
+                actionId: actionId
 
+            },
+            cache: false,
+            timeout: 5000,
+            complete: function() {
+                //called when complete
+                console.log('process complete');
+            },
+
+            success: function(data) {
+                console.log(data);
+                console.log('process sucess');
+                location.reload();
+            },
+
+            error: function() {
+                console.log('process error');
+            },
+        });
+    }
+</script>
 
 <div class="table-title">
     <h3>Alle Tickets im Sprint</h3>
@@ -43,4 +75,9 @@
     </tbody>
 </table>
 
-<div>Last Reload: {{reloadTime}}</div>
+<div class="table-title">
+    <img src="../images/btn_play.png" width="30px" height="30px" style="float: left" onclick="sendAdminCmd('playSound',1)"/>
+    <img src="../images/btn_play.png" width="30px" height="30px" style="float: left" onclick="sendAdminCmd('playSound',2)"/>
+</div>
+
+<div>Last Reload1: {{reloadTime}}</div>

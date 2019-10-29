@@ -9,6 +9,10 @@
 
 
 ## Changelog
+### 1.4.2
+* Add shortcut to play sound manualy
+* Add config for gain 
+
 ### 1.4.1
 * Make loglevel configurable
 
