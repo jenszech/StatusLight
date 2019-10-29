@@ -69,8 +69,12 @@
         "insertGrafanaReport": ""
       },
       "soundPlayer": {
-        "enable": false,
-        "gain": 50
+        "enable": true,
+        "gain": 50,
+        "changeFile": "party_horn.wav",
+        "finishFile": "trex.wav",
+        "player": "afplay,",
+        "device": "plughw0:0"
       }
     }
   }

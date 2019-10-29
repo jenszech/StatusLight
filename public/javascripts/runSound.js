@@ -13,8 +13,8 @@ var options = {
     filename: "/Users/j.zech/Documents/GIT-Repos/StatusLight/public/sound/trex.mp3",
     gain: myconfig.gain,
     debug: true,
-    player: "afplay",   // other supported players are 'aplay', 'mpg123', 'mpg321'
-    device: "plughw0:0"
+    player: myconfig.player,   // other supported players are 'aplay', 'mpg123', 'mpg321'
+    device: myconfig.device
 }
 var player = new soundplayer(options);
 
