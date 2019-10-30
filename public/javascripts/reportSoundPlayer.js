@@ -18,7 +18,7 @@ exports.reportStatusChange = function(changedTicket) {
         if (changedTicket.isFinished()) {
             player.playFile(path.resolve('./public/sound/'+myconfig.finishFile))
         } else {
-            player.playFile(path.resolve('./public/sound/'.changeFile))
+            player.playFile(path.resolve('./public/sound/'+myconfig.changeFile))
         }
     }
 }
