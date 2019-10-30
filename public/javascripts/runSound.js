@@ -19,7 +19,7 @@ var options = {
 var player = new soundplayer(options);
 
 exports.playFile = function(filename) {
-    logger.debug(filename);
     player.options.filename = filename;
+    logger.debug("runSound: " + options.player + ":"+options.device + " -> " + options.filename);
     player.play();
 }
