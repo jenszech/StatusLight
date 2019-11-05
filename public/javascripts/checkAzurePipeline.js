@@ -55,7 +55,7 @@ function callback(error, response, body) {
 
 function updateStatusFromJenkins(json) {
     logger.debug('JSON: ',json);
-    var id = json.name;
+    var id = json.definition.name;
     var url = json.definition.url;
     var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
     switch (json.result) {
