@@ -9,6 +9,9 @@
 
 
 ## Changelog
+### 1.4.3
+* Add Azure pipeline checks
+
 ### 1.4.2
 * Add shortcut to play sound manualy
 * Add config for gain 
