@@ -30,6 +30,16 @@
           "INSERT YOUR JOBNAME"
         ]
       },
+      "azurePipeline": {
+        "enable": false,
+        "host": "dev.azure.com",
+        "organization": "YOUR ORGANISATION",
+        "project": "YOUR PROJECT",
+        "definitonName": "YOUR PIPELINE NAME",
+        "apiversion": "5.0-preview.1",
+        "apiToken": "YOUR TOKEN",
+        "alertLight": 2
+      },
       "dtsmon" : {
         "enable": false,
         "alertLight": 3,
