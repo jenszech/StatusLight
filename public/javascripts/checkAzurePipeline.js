@@ -65,7 +65,7 @@ function updateStatusFromJenkins(json) {
     }
 
     //Call Statuslist Callback
-    updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, json.buildNumber, state, 0);
+    updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, id, state, 0);
 }
 
 
