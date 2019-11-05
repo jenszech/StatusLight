@@ -6,6 +6,7 @@ const { STATUS_LIGHTS } = require('./common.js');
 const checkLocal = require('./checkLocal')
 const checkGrafana = require('./checkGrafana')
 const checkJenkins = require('./checkJenkins')
+const checkAzurePipeline = require('./checkAzurePipeline')
 const checkDtsmon = require('./checkDtsmon');
 const checkJira = require('./checkJira');
 const reportSlack = require('./reportSlack');
@@ -40,6 +41,7 @@ exports.init = function() {
     //Init Checks
     checkLocal.initCheck(statuslist.updateList);
     checkJenkins.initCheck(statuslist.updateList);
+    checkAzurePipeline.initCheck(statuslist.updateList);
     checkGrafana.initCheck(statuslist.updateList);
     checkDtsmon.initCheck(statuslist.updateList);
 
@@ -79,6 +81,7 @@ function runChecks(trigger) {
     checkLocal.checkStatus();
     checkGrafana.checkStatus();
     checkJenkins.checkStatus();
+    checkAzurePipeline.checkStatus();
     checkDtsmon.checkStatus();
     checkJira.checkStatus();
     logger.debug('Check by '+trigger);
