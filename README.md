@@ -183,7 +183,10 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
               "definitonName": "YOUR PIPELINE NAME",
               "apiversion": "5.0-preview.1",
               "apiToken": "YOUR TOKEN",
-              "alertLight": 2
+              "alertLight": 3,
+              "branches" : [
+                "INSERT YOUR BRANCHNAME"
+              ]
             },
       "dtsmon" : {
         "enable": false,
