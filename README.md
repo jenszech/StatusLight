@@ -14,12 +14,17 @@ Der Status wird auf einer USB Ampel visualisiert.
     * Grafana Alerts Anbindung per Polling
     * Jenkins Jobs Anbindung per Polling
     * DTSMon Anbindung per WebCrawling
+    * Azure Pipeline Anbindung ber Polling
 * Visulisierung und Alarming über unterschiedliche Reporter möglich
     * WebInterface für einen detailierten Einblick in die Einzelstatus abfragen
     * Alarmmeldungen im Slack Channel
     * Visualisierung über eine USB Ampel
     * Visualisierung über Philips HUE Lampen
     * Alarmmeldung können in einer InfluxDB archiviert & visualisiert werden.
+    * Benachrichtigung per Sound
+* Benachrichtigung über relevante Ereignisse
+    * Status wechsel eines Jira Tickets
+    * Abschluss eines Jira Tickets
 * Pausieren einzelner Alarme mit automatischer Reaktivierung bei nächstem Status Wechsel
 * Serverbetrieb
     * Unterstützt Serverbetrieb inkl. Prozessmanagement & Autostart nach Reboot
@@ -69,7 +74,7 @@ Installation der Cleware Software
 git clone https://github.com/flok99/clewarecontrol.git
 cd clewarecontrol
 sudo make install
-cp /bin/clewarecontrol /usr/bin/clewarecontrol
+sudo cp /bin/clewarecontrol /usr/bin/clewarecontrol
 ```
 
 Zum Testen muss die Ampel per USB angeschlossen sein. Zuerst muss dann die DeviceId ermittelt werden. Anshcließen kann über die Kommandozeile direkt die Ampel gesteuert werden.
@@ -170,6 +175,16 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
           "INSERT YOUR JOBNAME"
         ]
       },
+      "azurePipeline": {
+              "enable": false,
+              "host": "dev.azure.com",
+              "organization": "YOUR ORGANISATION",
+              "project": "YOUR PROJECT",
+              "definitonName": "YOUR PIPELINE NAME",
+              "apiversion": "5.0-preview.1",
+              "apiToken": "YOUR TOKEN",
+              "alertLight": 2
+            },
       "dtsmon" : {
         "enable": false,
         "alertLight": 3,
@@ -177,7 +192,15 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
         "url" : "https://dtsmon.buch.de/index.php?i=monitoring&mode=group&m=504",
         "username" : "INSERT YOUR USERNAME",
         "password" : "INSERT YOUR PASSWORD"
-      }
+      },
+        "jira": {
+          "enable": false,
+          "host": "YOUR JIRA HOST",
+          "user": "YOUR MONITORING USER",
+          "password": "YOUR PASSWORD",
+          "strictSSL": true,
+          "SprintBoardId": 0
+        }
     },
     "reportConfig": {
       "trafficLight": {
@@ -206,6 +229,14 @@ Die Environment Konfiguration enthalten dagegen alle lokalen Anpassungen inkl. P
       },
       "statusHtml": {
         "insertGrafanaReport": ""
+      },
+      "soundPlayer": {
+        "enable": true,
+        "gain": 50,
+        "changeFile": "party_horn.wav",
+        "finishFile": "trex.wav",
+        "player": "afplay,",
+        "device": "plughw0:0"
       }
     }
   }

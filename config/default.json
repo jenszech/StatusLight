@@ -47,6 +47,14 @@
         "url" : "https://dtsmon.buch.de/index.php?i=monitoring&mode=group&m=504",
         "username" : "INSERT YOUR USERNAME",
         "password" : "INSERT YOUR PASSWORD"
+      },
+      "jira": {
+        "enable": false,
+        "host": "YOUR JIRA HOST",
+        "user": "YOUR MONITORING USER",
+        "password": "YOUR PASSWORD",
+        "strictSSL": true,
+        "SprintBoardId": 0
       }
     },
     "reportConfig": {
