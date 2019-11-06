@@ -38,7 +38,10 @@
         "definitonName": "YOUR PIPELINE NAME",
         "apiversion": "5.0-preview.1",
         "apiToken": "YOUR TOKEN",
-        "alertLight": 2
+        "alertLight": 2,
+        "branches" : [
+          "INSERT YOUR BRANCHNAME"
+        ]
       },
       "dtsmon" : {
         "enable": false,

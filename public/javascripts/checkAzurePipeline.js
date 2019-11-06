@@ -18,11 +18,13 @@ exports.initCheck = function(callbackFunction) {
 
 exports.checkStatus = function() {
     if (myconfig.azurePipeline.enable) {
-        checkStatus();
+        for (var i in myconfig.azurePipeline.branches) {
+            checkStatus(myconfig.azurePipeline.branches[i]);
+        }
     }
 }
 
-function checkStatus() {
+function checkStatus(branch) {
     const options = {
         rejectUnauthorized: false,
         auth: {
@@ -33,7 +35,8 @@ function checkStatus() {
             "/"+ myconfig.azurePipeline.organization +
             '/'+ myconfig.azurePipeline.project +
             '/_apis/build/latest/' + myconfig.azurePipeline.definitonName +
-            "?api-version=" + myconfig.azurePipeline.apiversion,
+            "?api-version=" + myconfig.azurePipeline.apiversion +
+            "&branchName=" + branch,
         headers: {
             'User-Agent': 'request',
             'Cache-Control': 'no-cache',
@@ -55,7 +58,9 @@ function callback(error, response, body) {
 
 function updateStatusFromJenkins(json) {
     logger.debug('JSON: ',json);
-    var id = json.definition.name;
+    var name = json.definition.name;
+    var branch = json.sourceBranch;
+    var id = branch;
     var url = json.definition.url;
     var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
     switch (json.result) {
@@ -65,7 +70,8 @@ function updateStatusFromJenkins(json) {
     }
 
     //Call Statuslist Callback
-    updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, id, state, 0);
+    //updateList(sId, shost, stype, sgroup, sname, sstatus, delay)
+    updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, branch, state, 0);
 }
 
 
