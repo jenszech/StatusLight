@@ -67,6 +67,10 @@ function updateStatusFromJenkins(json) {
         case 'succeeded':
             state = STATUS_LIGHTS.GREEN;
             break;
+        case 'canceled':
+            state = STATUS_LIGHTS.YELLOW;
+            break;
+
     }
 
     //Call Statuslist Callback
