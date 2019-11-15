@@ -60,7 +60,7 @@ function updateStatusFromJenkins(json) {
     logger.debug('JSON: ',json);
     var name = json.definition.name;
     var branch = json.sourceBranch;
-    var id = branch;
+    var id = hash(branch);
     var url = json.definition.url;
     var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
     switch (json.result) {
