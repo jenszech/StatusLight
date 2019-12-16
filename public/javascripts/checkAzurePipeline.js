@@ -42,7 +42,7 @@ function checkStatus(branch) {
             'Cache-Control': 'no-cache',
         }
     };
-    logger.debug('Request: ',options.url);
+    //logger.debug('Request: ',options.url);
     request(options, callback);
 }
 
@@ -57,7 +57,6 @@ function callback(error, response, body) {
 }
 
 function updateStatusFromJenkins(json) {
-    logger.debug('JSON: ',json);
     var name = json.definition.name;
     var branch = json.sourceBranch;
     var id = hash(branch);
@@ -68,13 +67,11 @@ function updateStatusFromJenkins(json) {
             state = STATUS_LIGHTS.GREEN;
             break;
         case 'canceled':
-            state = STATUS_LIGHTS.YELLOW;
+            //state = STATUS_LIGHTS.YELLOW;
             break;
-
     }
 
     //Call Statuslist Callback
-    //updateList(sId, shost, stype, sgroup, sname, sstatus, delay)
     updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, branch, state, 0);
 }
 
