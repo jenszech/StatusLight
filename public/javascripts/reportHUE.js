@@ -54,6 +54,11 @@ exports.initReport = function() {
         logger.info ("  - No lights configurate => disabled hue reporter");
         enabled = false;
     }
+
+    // Set initial light (needed to reset old Status reports
+    for (var i in myconfig.lightIds ) {
+        setLight(myconfig.lightIds[i], new LightEntry(myconfig.lightIds[i], false, 0, 248, 248));
+    }    
 }
 
 exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertList) {
@@ -71,7 +76,7 @@ exports.reportStatusChange = function(changedAlarm, oldStatus, newStatus, alertL
         if (newStatus.value > 1) {
             logger.debug("Hue - set Light: "+newStatus.value );
             for (var i in myconfig.lightIds ) {
-                setLight(myconfig.lightIds[i], new LightEntry(myconfig.lightIds[i], true, getLightColor(newStatus), 248, 248));
+                setLight(myconfig.lightIds[i], new LightEntry(myconfig.lightIds[i], true, getLightColor(1), 248, 248));
             }
         }
         //Restore lights

@@ -58,7 +58,7 @@ function getActiveSprintsCallback(error, sprints) {
 }
 
 function getTicketsInSprint(sprint) {
-    logger.debug('Call: Jira - getIssuesForSprint');
+    //logger.debug('Call: Jira - getIssuesForSprint');
     jira.board.getIssuesForSprint({
             boardId: '1783',
             sprintId: sprint.Id
