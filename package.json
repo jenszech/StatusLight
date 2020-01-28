@@ -1,6 +1,6 @@
 {
-  "name": "statusampel",
-  "version": "1.4.4",
+  "name": "statusLight",
+  "version": "1.4.5",
   "private": true,
   "scripts": {
     "start": "node ./bin/statusLight"

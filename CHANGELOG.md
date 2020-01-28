@@ -9,6 +9,16 @@
 
 
 ## Changelog
+### 1.4.5
+* Change Azure pipeline to check multiple pipelines
+
+### 1.4.4
+* Handling of initial hue state
+* Handling of Azure build status 'canceled'
+* Add more sounds
+* Bugfixes
+
+
 ### 1.4.3
 * Add Azure pipeline checks
 

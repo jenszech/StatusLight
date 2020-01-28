@@ -18,13 +18,14 @@ exports.initCheck = function(callbackFunction) {
 
 exports.checkStatus = function() {
     if (myconfig.azurePipeline.enable) {
-        for (var i in myconfig.azurePipeline.branches) {
-            checkStatus(myconfig.azurePipeline.branches[i]);
+        for (var i in myconfig.azurePipeline.pipelines) {
+            var pipeline = myconfig.azurePipeline.pipelines[i];
+            checkStatus(pipeline.definitionId, pipeline.branch);
         }
     }
 }
 
-function checkStatus(branch) {
+function checkStatus(definitionId, branch) {
     const options = {
         rejectUnauthorized: false,
         auth: {
@@ -34,7 +35,7 @@ function checkStatus(branch) {
         url: "https://"+ myconfig.azurePipeline.host +
             "/"+ myconfig.azurePipeline.organization +
             '/'+ myconfig.azurePipeline.project +
-            '/_apis/build/latest/' + myconfig.azurePipeline.definitonName +
+            '/_apis/build/latest/' + definitionId +
             "?api-version=" + myconfig.azurePipeline.apiversion +
             "&branchName=" + branch,
         headers: {
@@ -42,24 +43,30 @@ function checkStatus(branch) {
             'Cache-Control': 'no-cache',
         }
     };
-    //logger.debug('Request: ',options.url);
+    logger.debug('Request: '+ options.url);
     request(options, callback);
 }
 
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
-        //logger.debug(body)
         const json = JSON.parse(body);
+        //logger.debug("Result for: "+json.definition.id + " - " + json.sourceBranch);
         updateStatusFromJenkins(json);
+    } else if (!error && response.statusCode == 404) {
+        logger.warn('Pipeline not found: ' + response.body)
     } else {
         logger.error('Error: ',error.message)
     }
 }
 
 function updateStatusFromJenkins(json) {
-    var name = json.definition.name;
+    var pipelineName = json.definition.name;
     var branch = json.sourceBranch;
-    var id = hash(branch);
+    if (branch.indexOf('refs/heads/') >= 0) {
+        branch = branch.substr(11, branch.length);
+    }
+    var name = pipelineName + " (" +branch +")";
+    var id = hash(name);
     var url = json.definition.url;
     var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
     switch (json.result) {
@@ -72,7 +79,7 @@ function updateStatusFromJenkins(json) {
     }
 
     //Call Statuslist Callback
-    updateList(id, url, 'Azure Pipeline', myconfig.azurePipeline.definitonName, branch, state, 0);
+    updateList(id, url, 'Azure Pipeline',pipelineName, name, state, 0);
 }
 
 
