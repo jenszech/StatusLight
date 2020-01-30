@@ -35,14 +35,16 @@
         "host": "dev.azure.com",
         "organization": "YOUR ORGANISATION",
         "project": "YOUR PROJECT",
-        "definitonName": "YOUR PIPELINE NAME",
         "apiversion": "5.0-preview.1",
         "apiToken": "YOUR TOKEN",
         "alertLight": 2,
-        "branches" : [
-          "INSERT YOUR BRANCHNAME"
-        ]
-      },
+        "pipelines": [
+          { "definitionId": 58, "branch": "master" },
+          { "definitionId": 58, "branch": "release" },
+          { "definitionId": 58, "branch": "develop" },
+          { "definitionId": 65, "branch": "release" },
+          { "definitionId": 66, "branch": "develop" }
+        ]      },
       "dtsmon" : {
         "enable": false,
         "alertLight": 3,
