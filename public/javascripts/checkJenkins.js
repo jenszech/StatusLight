@@ -75,7 +75,7 @@ function updateStatusFromJenkins(json) {
             break;
     }
     //Call Statuslist Callback
-    updateList(id, myconfig.jenkins.url, 'Jenkins Build', json.name, json.name, state, 0);
+    updateList(id, 'Jenkins Build', json.name, json.name, state, 0);
 }
 
 

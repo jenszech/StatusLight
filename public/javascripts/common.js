@@ -9,6 +9,20 @@ var STATUS_LIGHTS = new Enum({
     'RED':3
 });
 
+var StatusEntry = function(id, typ, group, name, statusInt) {
+    this.Id = id;
+    this.Typ = typ;
+    this.Group = group;
+    this.Name = name;
+    this.Status = STATUS_LIGHTS.get(statusInt);
+    this.UpdateDate = Date.now();
+    this.UpdateDateStr = function() {return dateFormat(this.UpdateDate, 'dd.mm.yyyy HH:MM');}
+    this.LastAlarmChange = Date.now();
+    this.LastAlarmChangeStr = function() {return dateFormat(this.LastAlarmChange, 'dd.mm.yyyy HH:MM');}
+    this.DelayAlarm = 0;
+    this.Disabled = false;
+};
+
 var SprintEntry = function(id) {
     this.Id = id;
     this.Name = null;
@@ -49,6 +63,7 @@ var TicketEntry = function(id) {
 
 module.exports = {
     STATUS_LIGHTS,
+    StatusEntry,
     SprintEntry,
     TicketEntry
 };

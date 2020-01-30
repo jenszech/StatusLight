@@ -53,7 +53,7 @@ function updateStatusFromGrafana(json) {
             case 'no_data': state = STATUS_LIGHTS.YELLOW;
             case 'ok': state = STATUS_LIGHTS.GREEN;
         }
-        updateList(id, myconfig.grafana.url, 'Grafana Alert', json[alert].dashboardSlug, json[alert].name, state, 0);
+        updateList(id, 'Grafana Alert', json[alert].dashboardSlug, json[alert].name, state, 0);
     }
 }
 

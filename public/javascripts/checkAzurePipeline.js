@@ -67,7 +67,6 @@ function updateStatusFromJenkins(json) {
     }
     var name = pipelineName + " (" +branch +")";
     var id = hash(name);
-    var url = json.definition.url;
     var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
     switch (json.result) {
         case 'succeeded':
@@ -79,7 +78,7 @@ function updateStatusFromJenkins(json) {
     }
 
     //Call Statuslist Callback
-    updateList(id, url, 'Azure Pipeline',pipelineName, name, state, 0);
+    updateList(id, 'Azure Pipeline',pipelineName, name, state, 0);
 }
 
 

@@ -32,7 +32,7 @@ exports.setLocale = function(lightValue) {
 
 function updateStatusFromLocale() {
     //Call Statuslist Callback
-    updateList(1, os.hostname(), 'Lokal', 'manuel', 'Manueller Alarm', localState, 0);
+    updateList(1, 'Lokal', 'manuel', 'Manueller Alarm', localState, 0);
 }
 
 
