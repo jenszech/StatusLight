@@ -10,6 +10,15 @@ var STATUS_LIGHTS = new Enum({
 });
 
 var StatusEntry = function(id, typ, group, name, statusInt) {
+    if (typeof(id)!== "number") {
+        throw new WrongParameterException('wrong type: id expecting number, found ' + typeof(id));
+    }
+    if (typeof(statusInt)!== "number") {
+        throw new WrongParameterException('wrong type: statusint expecting number, found ' + typeof(statusInt));
+    }
+    if ((statusInt < 0) || (statusInt > 3)) {
+        throw new WrongParameterException('statusint must between 1 to 3');
+    }
     this.Id = id;
     this.Typ = typ;
     this.Group = group;
@@ -60,10 +69,15 @@ var TicketEntry = function(id) {
     this.isFinished = function() {return this.Status == "Fertig";}
 }
 
+function WrongParameterException(message) {
+    this.message = message;
+};
 
 module.exports = {
     STATUS_LIGHTS,
     StatusEntry,
     SprintEntry,
-    TicketEntry
+    TicketEntry,
+    WrongParameterException
 };
+

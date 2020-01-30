@@ -2,7 +2,7 @@
 
 // noinspection JSUnusedLocalSymbols
 let winston = require('../../../config/winston');
-const { STATUS_LIGHTS, StatusEntry } = require('../common');
+const { STATUS_LIGHTS, StatusEntry, WrongParameterException } = require('../common');
 
 jest.dontMock('../statuslist');
 
@@ -54,6 +54,27 @@ test('updateList', function() {
 
     let list2 = statuslist.getList();
     expect(list2).toEqual(list1);
+});
+
+test('updateList - new Status', function() {
+    let element1;
+    expect(() => {
+        new StatusEntry(1, "Manuel", "Group1", "Name1", -1)
+    }).toThrow(WrongParameterException);
+    element1 = new StatusEntry(1, "Manuel", "Group1", "Name1", 0);
+    element1 = new StatusEntry(1, "Manuel", "Group1", "Name1", 3);
+    expect(() => {
+        new StatusEntry(1, "Manuel", "Group1", "Name1", 4)
+    }).toThrow(WrongParameterException);
+
+    expect(() => {
+        new StatusEntry(1, "Manuel", "Group1", "Name1", "YELLOW")
+    }).toThrow(WrongParameterException);
+
+    expect(() => {
+        new StatusEntry("ID1", "Manuel", "Group1", "Name1", -1)
+    }).toThrow(WrongParameterException);
+
 });
 
 test('getStatus', function() {
