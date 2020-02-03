@@ -1,5 +1,5 @@
 "use strict";
-const { STATUS_LIGHTS } = require('./common.js');
+const { STATUS_LIGHTS, StatusEntry, WrongParameterException } = require('./common.js');
 const { loggers } = require('winston');
 const logger = loggers.get('appLogger');
 
@@ -22,17 +22,17 @@ exports.getList = function() {
     return statusList;
 };
 
-exports.getStatus = function(id) {
+exports.getStatus = function(id, typ) {
     for (let i in statusList) {
-        if (statusList.hasOwnProperty(i) && (statusList[i].Id === id)) {
+        if (statusList.hasOwnProperty(i) && (statusList[i].Id === id) && (statusList[i].Typ === typ)) {
             return statusList[i];
         }
     }
     return null;
 };
 
-exports.setDisable = function(id, isDisabled) {
-    let status = this.getStatus(id);
+exports.setDisable = function(id, typ, isDisabled) {
+    let status = this.getStatus(id, typ);
     if (status != null) {
         status.Disabled = isDisabled;
         logger.debug(' Set Disabled Check: ' + id + ' to ' + isDisabled);
@@ -40,6 +40,9 @@ exports.setDisable = function(id, isDisabled) {
 };
 
 exports.updateList = function(status, delay) {
+    if (!(status instanceof StatusEntry)) {
+        throw new WrongParameterException('wrong type: status expecting StatusEntry');
+    }
     status.DelayAlarm = delay;
     update(status);
 };
@@ -58,9 +61,10 @@ exports.getGesamtStatus = function() {
 
 exports.getAlerts = function() {
     let result = [];
+    let now = Date.now();
     for (let i in statusList) {
         if (statusList.hasOwnProperty(i) && (statusList[i].Disabled !== true) && (statusList[i].Status.value > STATUS_LIGHTS.GREEN.value)) {
-            if (statusList[i].LastAlarmChange + statusList[i].DelayAlarm*1000 <= Date.now()) {
+            if (statusList[i].LastAlarmChange + statusList[i].DelayAlarm*1000 <= now) {
                 result.push(statusList[i]);
             }
         }
@@ -68,36 +72,51 @@ exports.getAlerts = function() {
     return result;
 };
 
-function setState(status, newStatus) {
-    if (status.Status.value !== newStatus.Status.value) {
-        logger.info("Status change: " + status.Status.key + " - " + status.Typ + ":" + status.Name);
-        if (status.Disabled === true) {
-            status.Disabled = false;
+exports.setState = function(statusEntry, newStatus) {
+//function setState(statusEntry, newStatus) {
+    if (!(statusEntry instanceof StatusEntry)) {
+        throw new WrongParameterException('wrong type: statusEntry expecting StatusEntry');
+    }
+    if (typeof (newStatus) !== "object") {
+        throw new WrongParameterException('wrong type: newStatus expecting Object, found ' + typeof (newStatus));
+    }
+    if ((newStatus.value < 0) || (newStatus.value >3)){
+        throw new WrongParameterException('Status value must between 0 to 3');
+    }
+    if (statusEntry.Status.value !== newStatus.value) {
+        logger.info("Status change: " + statusEntry.Status.key + " - " + statusEntry.Typ + ":" + statusEntry.Name);
+        if (statusEntry.Disabled === true) {
+            statusEntry.Disabled = false;
             logger.debug(' Reenabled');
         }
-        if ((newStatus.Status.value > 1) && (status.Status.value <= 1)) {
-            status.LastAlarmChange = Date.now();
-        } else if ((newStatus.Status.value <= 1)) {
-            status.LastAlarmChange = Date.now();
+        if ((newStatus.value > 1) && (statusEntry.Status.value <= 1)) {
+            statusEntry.LastAlarmChange = Date.now();
+        } else if ((newStatus.value === 1) && (statusEntry.Status.value !== 1)) {
+            statusEntry.LastAlarmChange = Date.now();
+        }
+        if (newStatus !== STATUS_LIGHTS.GRAY) {
+            statusEntry.Status = newStatus;
         }
     }
-    status.Status = newStatus.Status;
-}
+};
 
 function update(newStatus) {
-    let found = false;
-    for (let i in statusList) {
-        if (statusList.hasOwnProperty(i) && (statusList[i].Typ === newStatus.Typ) && (statusList[i].Id === newStatus.Id)) {
-            setState(statusList[i], newStatus);
-            statusList[i].UpdateDate = Date.now();
-            found = true;
-            break; //Stop this loop, we found it!
-        }
-    }
-    if (!found) {
+    let statusEntry =  module.exports.getStatus(newStatus.Id, newStatus.Typ);
+    if (statusEntry != null) {
+        updateStatus(statusEntry, newStatus.Status);
+    } else {
         statusList.push(newStatus);
+        statusEntry = newStatus
     }
+    notifyStatusUpdate(statusEntry);
+}
 
+function updateStatus(statusEntry, newStatus) {
+    module.exports.setState(statusEntry, newStatus);
+    statusEntry.UpdateDate = Date.now();
+}
+
+function notifyStatusUpdate(newStatus) {
     if (typeof updateLightCallback != 'undefined') {
         updateLightCallback(newStatus);
     }

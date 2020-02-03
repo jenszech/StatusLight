@@ -1,28 +1,30 @@
-"use strict"
+"use strict";
 
 const request = require('request');
 const hash = require('string-hash');
 const config = require('config');
-const { STATUS_LIGHTS } = require('./common.js');
-const { loggers } = require('winston')
+const { STATUS_LIGHTS, StatusEntry } = require('./common.js');
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var myconfig = config.get('TrafficLight.checkConfig');
-var updateList;
+let myconfig = config.get('TrafficLight.checkConfig');
+let updateList;
 
 exports.initCheck = function(callbackFunction) {
     logger.info('=> Init checks - Jenkins (Enabled: '+myconfig.jenkins.enable+')');
     updateList = callbackFunction;
-}
+};
 
 exports.checkStatus = function() {
     if (myconfig.jenkins.enable) {
-        for (var i in myconfig.jenkins.jobs) {
-            checkStatus(myconfig.jenkins.jobs[i]);
+        for (let i in myconfig.jenkins.jobs) {
+            if (myconfig.jenkins.jobs.hasOwnProperty(i)) {
+                checkStatus(myconfig.jenkins.jobs[i]);
+            }
         }
     }
-}
+};
 
 function checkStatus(job) {
     const options = {
@@ -41,7 +43,7 @@ function checkStatus(job) {
 }
 
 function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
         //logger.debug(body)
         const json = JSON.parse(body);
         updateStatusFromJenkins(json);
@@ -52,8 +54,8 @@ function callback(error, response, body) {
 
 function updateStatusFromJenkins(json) {
     //console.log('JSON: ',json);
-    var id = hash(json.fullName);
-    var state = 0;
+    let id = hash(json.fullName);
+    let state;
     switch (json.color) {
         case 'red':
             state = STATUS_LIGHTS.get(myconfig.jenkins.alertLight);
@@ -75,7 +77,7 @@ function updateStatusFromJenkins(json) {
             break;
     }
     //Call Statuslist Callback
-    updateList(id, 'Jenkins Build', json.name, json.name, state, 0);
+    updateList(new StatusEntry(id, 'Jenkins Build', json.name, json.name, state.value), 0);
 }
 
 

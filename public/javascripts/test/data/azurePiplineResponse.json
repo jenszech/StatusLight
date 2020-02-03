@@ -1,0 +1,18 @@
+{
+  "id": 1111,
+  "buildNumber": "20200101.1",
+  "status": "completed",
+  "result": "succeeded",
+  "queueTime": "2020-02-03T12:16:10.5729635Z",
+  "startTime": "2020-02-03T12:16:21.5171446Z",
+  "finishTime": "2020-02-03T12:20:38.0227297Z",
+  "definition": {
+    "id": 1,
+    "name": "Deplyoment pipeline",
+    "type": "build"
+  },
+  "buildNumberRevision": 1,
+  "sourceBranch": "refs/heads/develop",
+  "priority": "normal",
+  "lastChangedDate": "2020-02-03T12:20:53.4Z"
+}
