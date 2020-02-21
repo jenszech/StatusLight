@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/statusLight",
+    "deploy": "pm2 restart statusLight",
     "test": "jest"
   },
   "dependencies": {
