@@ -59,7 +59,9 @@
 <table class="table-fill">
     <thead>
     <tr>
+        <th class="text-left">id</th>
         <th class="text-left">Typ</th>
+        <th class="text-left">Group</th>
         <th class="text-left">Name</th>
         <th class="text-left">Status</th>
         <th class="text-left">Last Change</th>
@@ -69,7 +71,9 @@
     <tbody class="table-hover">
         {{#each statusList}}
         <tr>
+            <td class="text-left">{{this.Id}}</td>
             <td class="text-left">{{this.Typ}}</td>
+            <td class="text-left">{{this.Group}}</td>
             <td class="text-left">
                 {{#if this.Disabled}}
                     <del>{{this.Name}}</del>

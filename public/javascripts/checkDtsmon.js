@@ -1,20 +1,20 @@
-"use strict"
+"use strict";
 
 const request = require('request');
 const hash = require('string-hash');
 const cheerio = require('cheerio');
 const  config = require('config');
-const { loggers } = require('winston')
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var myconfig = config.get('TrafficLight.checkConfig.dtsmon');
-var updateList;
+let myconfig = config.get('TrafficLight.checkConfig.dtsmon');
+let updateList;
 
 exports.initCheck = function(callbackFunction) {
     logger.info('=> Init checks - DTSMon (Enabled: '+myconfig.enable+')');
     updateList = callbackFunction;
-}
+};
 
 const jsonReponse = [];
 const columnHeadings = ["Status", "Server", "Name", "IP", "Group"];
@@ -22,18 +22,16 @@ const columnHeadings = ["Status", "Server", "Name", "IP", "Group"];
 exports.checkStatus = function() {
     checkStatus();
 
-}
+};
 
 function checkStatus() {
     if (myconfig.enable) {
-        var url = 'http://localhost:8088/example';
-        var headers = {
+        let headers = {
             'User-Agent': 'request',
             'Cache-Control': 'no-cache',
         };
 
-        var form = {username: myconfig.username, password: myconfig.password, login: "Anmenden", redirect: "index.php"};
-        var url = myconfig.url;
+        let form = {username: myconfig.username, password: myconfig.password, login: "Anmenden", redirect: "index.php"};
 
         request.post({headers: headers, url: myconfig.url, form: form, method: 'POST'}, function (e, r, body) {
             callbackStatusCheck(e, r, body);
@@ -42,17 +40,19 @@ function checkStatus() {
 }
 function callbackStatusCheck(error, response, body) {
     jsonReponse.length = 0;
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
             let $ = cheerio.load(body);
 
         $("#hostlist").each(function(i, table) {
-            var trs = $(table).find('tr')
+            //let trs = $(table).find('tr');
             // Process rows for data
             $(table).find('tr').each(processRow)
-        })
+        });
 
-        for (var i in jsonReponse) {
-            updateStatusDTSMon(jsonReponse[i]);
+        for (let i in jsonReponse) {
+            if (jsonReponse.hasOwnProperty(i)) {
+                updateStatusDTSMon(jsonReponse[i]);
+            }
         }
     } else {
         logger.error('Error: ',error.toString()) // Print the google web page.
@@ -60,7 +60,7 @@ function callbackStatusCheck(error, response, body) {
 }
 
 function processRow(i, row) {
-    var rowJson = {}
+    let rowJson = {};
     //logger.debug(row);
     let $ = cheerio.load(row);
     $(row).find('td').each(function(j, cell) {
@@ -74,10 +74,11 @@ function processRow(i, row) {
                 rowJson[ columnHeadings[2] ] = $(cell).find('a')[0].children[0].data;
                 rowJson[ columnHeadings[3] ] = $(cell).find('span')[0].children[0].data;
                 rowJson[ columnHeadings[4] ] = rowJson[ columnHeadings[1]].split(".")[0].replace(/\d+/g, '');
+                break;
             default:
                 break;
         }
-    })
+    });
     //logger.debug(rowJson);
     // Skip blank rows
     if (JSON.stringify(rowJson) !== '{}') jsonReponse.push(rowJson)
@@ -85,8 +86,8 @@ function processRow(i, row) {
 
 function updateStatusDTSMon(json) {
     //console.log('JSON: ',json);
-    var id = hash(json.Server);
-    var state = 0;
+    let id = hash(json.Server);
+    let state;
     switch (json.Status) {
         case 'FAILURE': state = myconfig.alertLight; break;
         case 'Keine Verbindung': state = 2; break;
@@ -95,5 +96,5 @@ function updateStatusDTSMon(json) {
         default: state = myconfig.alertLight;
     }
     //Call Statuslist Callback
-    updateList(id, json.Server, 'DTSMon', json.Group, json.Name, state, myconfig.alarmDelay);
+    updateList(new StatusEntry(id, 'DTSMon', json.Group, json.Name, state), myconfig.alarmDelay);
 }

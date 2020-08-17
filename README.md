@@ -92,7 +92,7 @@ sudo apt-get install git
 #### Installation von node.js
 ```
 sudo apt-get update
-curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 node -v
 ```
@@ -100,7 +100,7 @@ node -v
 ### Installation
 #### Installation des StatusAmpel Projekts
 ```
-git clone ssh://xxx@vm-build1p.buch.de:29418/StatusAmpel
+git clone https://github.com/jenszech/StatusLight.git
 cd StatusAmpel
 npm install
 ```
@@ -118,13 +118,14 @@ pm2 start bin/statusLight
 pm2 startup systemd
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 pm2 list
+pm2 save
 ```
 
 #### Einrichten einer Umgebungsvariable
 Um unterschiedliche Konfigurationen je Umgebung (Dev, Integ, Prod) nutzen zu können, muss auf dem System die aktuelle Umgebung gesetzt werden.
 Dafür muss in der environment Konfiguration 
 ``` 
-sudo vi /etc/environment 
+sudo vim /etc/environment 
 ```
 die folgende Zeile hinzuggefügt werden
 ```

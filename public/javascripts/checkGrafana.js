@@ -1,14 +1,14 @@
-"use strict"
+"use strict";
 
 const request = require('request');
 const config = require('config');
-const { STATUS_LIGHTS } = require('./common.js');
-const { loggers } = require('winston')
+const { STATUS_LIGHTS, StatusEntry } = require('./common.js');
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var myconfig = config.get('TrafficLight.checkConfig');
-var updateList;
+let myconfig = config.get('TrafficLight.checkConfig');
+let updateList;
 
 const options = {
     rejectUnauthorized: false,
@@ -25,16 +25,16 @@ const options = {
 exports.initCheck = function(callbackFunction) {
     logger.info('=> Init checks - Grafana (Enabled: '+myconfig.grafana.enable+')');
     updateList = callbackFunction;
-}
+};
 
 exports.checkStatus = function() {
     if (myconfig.grafana.enable) {
         request(options, callback);
     }
-}
+};
 
 function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
         //logger.debug(body)
         const json = JSON.parse(body);
         updateStatusFromGrafana(json);
@@ -45,15 +45,23 @@ function callback(error, response, body) {
 
 function updateStatusFromGrafana(json) {
     //logger.debug('JSON: ',json);
-    for(var alert in json){
-        var id = Number(json[alert].id);
-        var state = 0;
-        switch (json[alert].state) {
-            case 'alerting': state = STATUS_LIGHTS.get(myconfig.grafana.alertLight);
-            case 'no_data': state = STATUS_LIGHTS.YELLOW;
-            case 'ok': state = STATUS_LIGHTS.GREEN;
+    for(let alert in json){
+        if (json.hasOwnProperty(alert)) {
+            let id = Number(json[alert].id);
+            let state = 0;
+            switch (json[alert].state) {
+                case 'alerting':
+                    state = STATUS_LIGHTS.get(myconfig.grafana.alertLight);
+                    break;
+                case 'no_data':
+                    state = STATUS_LIGHTS.YELLOW;
+                    break;
+                case 'ok':
+                    state = STATUS_LIGHTS.GREEN;
+                    break;
+            }
+            updateList(new StatusEntry(id, 'Grafana Alert', json[alert].dashboardSlug, json[alert].name, state.value), 0);
         }
-        updateList(id, myconfig.grafana.url, 'Grafana Alert', json[alert].dashboardSlug, json[alert].name, state, 0);
     }
 }
 

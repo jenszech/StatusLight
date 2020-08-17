@@ -1,29 +1,36 @@
-"use strict"
+"use strict";
 
 const request = require('request');
 const hash = require('string-hash');
 const config = require('config');
-const { STATUS_LIGHTS } = require('./common.js');
-const { loggers } = require('winston')
+const { STATUS_LIGHTS, StatusEntry } = require('./common.js');
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var myconfig = config.get('TrafficLight.checkConfig');
-var updateList;
+// noinspection JSUnresolvedFunction
+let myconfig = config.get('TrafficLight.checkConfig');
+let updateList;
 
 exports.initCheck = function(callbackFunction) {
     logger.info('=> Init checks - Azure Pipeline (Enabled: '+myconfig.azurePipeline.enable+')');
     updateList = callbackFunction;
-}
+};
+
+exports.setConfig = function(newConfig) {
+    myconfig = newConfig;
+};
 
 exports.checkStatus = function() {
     if (myconfig.azurePipeline.enable) {
-        for (var i in myconfig.azurePipeline.pipelines) {
-            var pipeline = myconfig.azurePipeline.pipelines[i];
-            checkStatus(pipeline.definitionId, pipeline.branch);
+        for (let i in myconfig.azurePipeline.pipelines) {
+            if (myconfig.azurePipeline.pipelines.hasOwnProperty(i)) {
+                let pipeline = myconfig.azurePipeline.pipelines[i];
+                checkStatus(pipeline.definitionId, pipeline.branch);
+            }
         }
     }
-}
+};
 
 function checkStatus(definitionId, branch) {
     const options = {
@@ -43,44 +50,50 @@ function checkStatus(definitionId, branch) {
             'Cache-Control': 'no-cache',
         }
     };
+
     logger.debug('Request: '+ options.url);
     request(options, callback);
 }
 
 function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
         const json = JSON.parse(body);
-        //logger.debug("Result for: "+json.definition.id + " - " + json.sourceBranch);
-        updateStatusFromJenkins(json);
-    } else if (!error && response.statusCode == 404) {
+        module.exports.updateStatusFromAzure(json);
+    } else if (!error && response.statusCode === 404) {
         logger.warn('Pipeline not found: ' + response.body)
     } else {
         logger.error('Error: ',error.message)
     }
 }
 
-function updateStatusFromJenkins(json) {
-    var pipelineName = json.definition.name;
-    var branch = json.sourceBranch;
+exports.updateStatusFromAzure = function(json) {
+    //logger.info(JSON.stringify(json));
+    let pipelineName = json.definition.name;
+    // noinspection JSUnresolvedVariable
+    let branch = json.sourceBranch;
     if (branch.indexOf('refs/heads/') >= 0) {
         branch = branch.substr(11, branch.length);
     }
-    var name = pipelineName + " (" +branch +")";
-    var id = hash(name);
-    var url = json.definition.url;
-    var state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
+    let name = pipelineName + " (" +branch +")";
+    let id = hash(name);
+    let state = STATUS_LIGHTS.GRAY;
     switch (json.result) {
         case 'succeeded':
             state = STATUS_LIGHTS.GREEN;
             break;
+        case 'none':
         case 'canceled':
+        case 'partiallySucceeded':
             //state = STATUS_LIGHTS.YELLOW;
+            break;
+        case 'failed':
+            state = STATUS_LIGHTS.get(myconfig.azurePipeline.alertLight);
             break;
     }
 
     //Call Statuslist Callback
-    updateList(id, url, 'Azure Pipeline',pipelineName, name, state, 0);
-}
+    updateList(new StatusEntry(id, 'Azure Pipeline',pipelineName, name, state.value), 0);
+};
 
 
 

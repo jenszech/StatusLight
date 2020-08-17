@@ -1,14 +1,13 @@
 # Roadmap
 ## Geplante Features
-* GitHub umstellung
-* Report Plugin Philips Hue
-* Report Plugin Influx 
 * Webhook Anbindung Jenkins
 * Webhook Anbindung Grafana
-* Stündliches Reset
 
 
 ## Changelog
+### 1.5.0
+* Update dependencies
+
 ### 1.4.5
 * Change Azure pipeline to check multiple pipelines
 

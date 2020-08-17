@@ -1,16 +1,15 @@
-"use strict"
+"use strict";
 
 const { SprintEntry, TicketEntry } = require('./common');
-const request = require('request');
 const config = require('config');
-const { loggers } = require('winston')
-var jiraClient = require('jira-connector');
+const { loggers } = require('winston');
+let jiraClient = require('jira-connector');
 
 const logger = loggers.get('appLogger');
 
-var myconfig = config.get('TrafficLight.checkConfig');
-var updateList;
-var jira;
+let myconfig = config.get('TrafficLight.checkConfig');
+let updateList;
+let jira;
 
 const options = {
     host: myconfig.jira.host,
@@ -25,13 +24,13 @@ exports.initCheck = function(callbackFunction) {
     logger.info('=> Init checks - Jira (Enabled: '+myconfig.jira.enable+')');
     jira = new jiraClient(options);
     updateList = callbackFunction;
-}
+};
 
 exports.checkStatus = function() {
     if (myconfig.jira.enable) {
         getActiveSprints(myconfig.jira.SprintBoardId);
     }
-}
+};
 
 // Jira Client
 function getActiveSprints(boardId) {
@@ -46,9 +45,9 @@ function getActiveSprintsCallback(error, sprints) {
     if (!error) {
         logger.debug('Call: Jira - getAllSprints - Callback');
         if (sprints.values.length > 0) {
-            for (var i=0; i<sprints.values.length; i++) {
-                var sprint = sprints.values[i];
-                var newSprint = createSprint(sprint);
+            for (let i=0; i<sprints.values.length; i++) {
+                let sprint = sprints.values[i];
+                let newSprint = createSprint(sprint);
                 getTicketsInSprint(newSprint);
             }
         }
@@ -67,9 +66,9 @@ function getTicketsInSprint(sprint) {
             if (!error) {
                 logger.debug('Call: Jira - getIssuesForSprint - Callback');
                 if (issues.issues.length > 0) {
-                    for (var i = 0; i < issues.issues.length; i++) {
-                        var newTicket = createTicket(sprint, issues.issues[i]);
-                        if (newTicket.Typ != "Unteraufgabe") {
+                    for (let i = 0; i < issues.issues.length; i++) {
+                        let newTicket = createTicket(sprint, issues.issues[i]);
+                        if (newTicket.Typ !== "Unteraufgabe") {
                             updateList(newTicket);
                         }
                     }
@@ -83,18 +82,18 @@ function getTicketsInSprint(sprint) {
 // END Jira Client
 
 function  createSprint(sprint) {
-    var newSprint = new SprintEntry(sprint.id);
+    let newSprint = new SprintEntry(sprint.id);
     newSprint.Name = sprint.name;
     newSprint.Goal = sprint.goal;
     newSprint.Start = sprint.start;
     newSprint.End = sprint.end;
-    newSprint.State = sprint.state
+    newSprint.State = sprint.state;
 
     return newSprint;
-};
+}
 
 function createTicket(sprint, issue) {
-    var newTicket = new TicketEntry(issue.id);
+    let newTicket = new TicketEntry(issue.id);
     newTicket.Sprint = sprint;
     newTicket.Key = issue.key;
     newTicket.Summary = issue.fields.summary;

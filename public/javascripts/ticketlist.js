@@ -1,12 +1,11 @@
-"use strict"
+"use strict";
 
-const express = require('express');
-const { loggers } = require('winston')
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var ticketList = [];
-var updateAudioCallback;
+let ticketList = [];
+let updateAudioCallback;
 
 
 /*
@@ -14,24 +13,24 @@ var updateAudioCallback;
  */
 exports.init = function() {
     logger.info('=> Ticketlist initialisiert');
-}
+};
 
 exports.setUpdateCallback = function(callbackFunction) {
     updateAudioCallback = callbackFunction;
-}
+};
 
 exports.getList = function() {
     return ticketList;
-}
+};
 
 exports.updateList = function(newTicket) {
     update(newTicket);
-}
+};
 
 function update(newTicket) {
-    var found = false;
-    for (var i in ticketList) {
-        if (ticketList[i].Id == newTicket.Id) {
+    let found = false;
+    for (let i in ticketList) {
+        if (ticketList.hasOwnProperty(i) && (ticketList[i].Id === newTicket.Id)) {
             setState(ticketList[i],newTicket);
             ticketList[i].UpdateDate = Date.now();
             found = true;
@@ -44,7 +43,7 @@ function update(newTicket) {
 }
 
 function setState(oldTicket, newTicket) {
-    if (oldTicket.Status != newTicket.Status) {
+    if (oldTicket.Status !== newTicket.Status) {
         logger.info("Ticket Status change: " + newTicket.Status + " - " + newTicket.Typ + ":" + newTicket.Name);
         oldTicket.Status = newTicket.Status;
         //if (!oldTicket.isFinished() && newTicket.isFinished()) {

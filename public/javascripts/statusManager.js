@@ -1,28 +1,28 @@
-"use strict"
+"use strict";
 
-const statuslist = require('./statuslist')
-const ticketlist = require('./ticketlist')
+const statuslist = require('./statuslist');
+const ticketlist = require('./ticketlist');
 const { STATUS_LIGHTS } = require('./common.js');
-const checkLocal = require('./checkLocal')
-const checkGrafana = require('./checkGrafana')
-const checkJenkins = require('./checkJenkins')
-const checkAzurePipeline = require('./checkAzurePipeline')
+const checkLocal = require('./checkLocal');
+const checkGrafana = require('./checkGrafana');
+const checkJenkins = require('./checkJenkins');
+const checkAzurePipeline = require('./checkAzurePipeline');
 const checkDtsmon = require('./checkDtsmon');
 const checkJira = require('./checkJira');
 const reportSlack = require('./reportSlack');
 const reportTrafficLight = require('./reportTrafficLight');
 const reportHue = require('./reportHUE');
 const reportInflux = require('./reportInflux');
-const reportSoundPlayer = require('./reportSoundPlayer')
+const reportSoundPlayer = require('./reportSoundPlayer');
 const pjson = require('../../package.json');
 const config = require('config');
-const { loggers } = require('winston')
+const { loggers } = require('winston');
 
 const logger = loggers.get('appLogger');
 
-var lastLightState = STATUS_LIGHTS.GRAY;
+let lastLightState = STATUS_LIGHTS.GRAY;
 
-var myconfig = config.get('TrafficLight.mainSetting');
+let myconfig = config.get('TrafficLight.mainSetting');
 
 exports.init = function() {
     logger.info("StatusAmpel v"+pjson.version + ' ('+myconfig.env+')');
@@ -51,7 +51,7 @@ exports.init = function() {
     statuslist.setUpdateCallback(changeAlarmTrigger);
     ticketlist.setUpdateCallback(changeNotifyTrigger);
     logger.info('Init completed');
-}
+};
 
 exports.runIntervallCheck = function() {
     if (myconfig.pollingEnabled) {
@@ -59,23 +59,23 @@ exports.runIntervallCheck = function() {
             runChecks('Timer');
         }, myconfig.pollingIntervall * 1000);
     }
-}
+};
 
 exports.runSingleCheck = function() {
     runChecks('SingleCheck');
-}
+};
 
 exports.getStatusList = function() {
     return statuslist;
-}
+};
 
 exports.getTicketList = function() {
     return ticketlist;
-}
+};
 
 exports.setLocal = function(lightValue) {
     checkLocal.setLocale(parseInt(lightValue, 10));
-}
+};
 
 function runChecks(trigger) {
     checkLocal.checkStatus();
@@ -95,9 +95,9 @@ function runReports(changedAlarm, lastState, currentState, alertList) {
 }
 
 function changeAlarmTrigger(changedAlarm) {
-    var currentLightState = statuslist.getGesamtStatus();
+    let currentLightState = statuslist.getGesamtStatus();
     runReports(changedAlarm, lastLightState, currentLightState, statuslist.getAlerts());
-    if (currentLightState.value != lastLightState.value) {
+    if (currentLightState.value !== lastLightState.value) {
         logger.info('Change light from '+lastLightState.key + ' to ' + currentLightState.key);
         lastLightState = currentLightState;
     }
